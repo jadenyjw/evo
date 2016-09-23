@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.GL20;
 import com.evo.game.stages.GameStage;
 
 public class GameScreen implements Screen {
+	
+
 	private GameStage stage;
 	public GameScreen() {
         stage = new GameStage();

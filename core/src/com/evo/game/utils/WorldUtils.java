@@ -3,6 +3,8 @@ package com.evo.game.utils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.physics.box2d.EdgeShape;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
@@ -11,13 +13,52 @@ public class WorldUtils {
         return new World(Constants.WORLD_GRAVITY, false);
     }
 
-    public static Body createGround(World world) {
+
+    public static Body createBorder(World world) {
+    	
+    	 // Create our body definition
+        BodyDef borderBodyDef = new BodyDef();
+        borderBodyDef.type = BodyType.StaticBody;
+
+        // Create a body from the defintion and add it to the world
+        Body borderBody = world.createBody(borderBodyDef);
+        
+        EdgeShape ground = new EdgeShape();
+        ground.set(0, 0, Constants.APP_WIDTH, 0 );
+        borderBody.createFixture(ground, 0.0f);
+        ground.dispose();
+        
+        EdgeShape leftWall = new EdgeShape();
+        leftWall.set(0, 0, 0, Constants.APP_HEIGHT);
+        borderBody.createFixture(leftWall, 0.0f);
+        leftWall.dispose();
+        
+        EdgeShape rightWall = new EdgeShape();
+        rightWall.set(Constants.APP_WIDTH, 0, 0, 0);
+        borderBody.createFixture(rightWall, 0.0f);
+        rightWall.dispose();
+        
+        
+        EdgeShape roof = new EdgeShape();
+        roof.set(Constants.APP_WIDTH, Constants.APP_HEIGHT,0, Constants.APP_HEIGHT );
+        borderBody.createFixture(roof, 0.0f);
+        roof.dispose();
+        
+        
+        
+        return borderBody;
+        
+    }
+    
+    public static Body createRunner(World world) {
         BodyDef bodyDef = new BodyDef();
-        bodyDef.position.set(new Vector2(Constants.GROUND_X, Constants.GROUND_Y));
-        Body body = world.createBody(bodyDef);
+        bodyDef.type = BodyDef.BodyType.DynamicBody;
+        bodyDef.position.set(new Vector2(Constants.RUNNER_X, Constants.RUNNER_Y));
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox(Constants.GROUND_WIDTH / 2, Constants.GROUND_HEIGHT / 2);
-        body.createFixture(shape, Constants.GROUND_DENSITY);
+        shape.setAsBox(Constants.RUNNER_WIDTH / 2, Constants.RUNNER_HEIGHT / 2);
+        Body body = world.createBody(bodyDef);
+        body.createFixture(shape, Constants.RUNNER_DENSITY);
+        body.resetMassData();
         shape.dispose();
         return body;
     }
