@@ -9,6 +9,7 @@ import com.badlogic.gdx.physics.box2d.EdgeShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.evo.game.enums.RunnerUserData;
 
 public class WorldUtils {
 	public static World createWorld() {
@@ -60,8 +61,24 @@ public class WorldUtils {
         body.createFixture(shape, Constants.RUNNER_DENSITY);
         body.resetMassData();
         body.setAngularDamping(5);
+        body.setUserData(new RunnerUserData());
         shape.dispose();
         return body;
+    }
+    
+    public static Body createFood(World world, float x, float y){
+    	
+    	BodyDef bodyDef = new BodyDef();
+    	bodyDef.type = BodyDef.BodyType.StaticBody;
+    	bodyDef.position.set(new Vector2(x, y));
+        CircleShape shape = new CircleShape();
+        shape.setRadius(0.15f);
+        Body foodBody = world.createBody(bodyDef);
+        foodBody.createFixture(shape, Constants.RUNNER_DENSITY);
+        foodBody.resetMassData();
+        shape.dispose();
+        
+    	return foodBody;
     }
 
 }

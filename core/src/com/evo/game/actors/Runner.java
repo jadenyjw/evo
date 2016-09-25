@@ -1,19 +1,17 @@
 package com.evo.game.actors;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.Shape;
 import com.evo.game.enums.RunnerUserData;
 public class Runner extends GameActor{
-	float velocity = 3f; // Your desired velocity of the car.
+
 
 	float velX; 
-	float velY; 
-
+	float velY;
 	
 	 public Runner(Body body) {
 	        super(body);
-
 	    }
-	 
 	 @Override
 	 public RunnerUserData getUserData(){
 		 return (RunnerUserData) userData;
@@ -26,13 +24,18 @@ public class Runner extends GameActor{
 		 body.setTransform(body.getPosition(), body.getAngle() + 0.1f);	 
 	 }
 	 public void moveForward(){
-		 velX = MathUtils.cos(body.getAngle()) * velocity;
-	     velY = MathUtils.sin(body.getAngle())* velocity;
+		 velX = MathUtils.cos(body.getAngle()) * getUserData().getVelocity();
+	     velY = MathUtils.sin(body.getAngle())* getUserData().getVelocity();
 	     body.setLinearVelocity(velX, velY);
 	     this.setX(body.getPosition().x);
 	     this.setY(body.getPosition().y);
 	 }
 	 public void stop(){
 		 body.setLinearVelocity(0,0);
+	 }
+	 
+	 public void grow(){
+		 Shape shape = body.getFixtureList().first().getShape();
+		 shape.setRadius(shape.getRadius() + 0.01f);
 	 }
 }
