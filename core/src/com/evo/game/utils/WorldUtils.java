@@ -6,6 +6,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.EdgeShape;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
@@ -35,6 +36,7 @@ public class WorldUtils {
         leftWall.dispose();
         
         EdgeShape rightWall = new EdgeShape();
+        
         rightWall.set(Constants.APP_WIDTH, 0, 0, 0);
         borderBody.createFixture(rightWall, 0.0f);
         rightWall.dispose();
@@ -44,8 +46,6 @@ public class WorldUtils {
         roof.set(Constants.APP_WIDTH, Constants.APP_HEIGHT,0, Constants.APP_HEIGHT );
         borderBody.createFixture(roof, 0.0f);
         roof.dispose();
-        
-        
         
         return borderBody;
         
@@ -61,6 +61,7 @@ public class WorldUtils {
         Body body = world.createBody(bodyDef);
         body.createFixture(shape, Constants.RUNNER_DENSITY);
         body.resetMassData();
+        body.setAngularDamping(5);
         shape.dispose();
         return body;
     }

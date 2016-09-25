@@ -52,18 +52,8 @@ public class GameStage extends Stage{
 
     @Override
     public void act(float delta) {
+    	
         super.act(delta);
-
-        // Fixed timestep
-        accumulator += delta;
-
-        while (accumulator >= delta) {
-            world.step(TIME_STEP, 6, 2);
-            accumulator -= TIME_STEP;
-        }
-
-        //TODO: Implement interpolation
-       
         if (leftKeyPressed){
         	runner.turnLeft();
         }
@@ -76,6 +66,18 @@ public class GameStage extends Stage{
         else if(!upKeyPressed){
         	runner.stop();
         }
+        // Fixed timestep
+        accumulator += delta;
+
+        
+        while (accumulator >= delta) {
+            world.step(TIME_STEP, 6, 2);
+            accumulator -= TIME_STEP;
+        }
+
+        //TODO: Implement interpolation
+       
+       
         
         
     }
