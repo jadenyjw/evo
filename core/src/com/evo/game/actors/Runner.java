@@ -2,7 +2,7 @@ package com.evo.game.actors;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Shape;
-import com.evo.game.enums.RunnerUserData;
+import com.evo.game.box2d.RunnerUserData;
 public class Runner extends GameActor{
 
 
@@ -35,7 +35,9 @@ public class Runner extends GameActor{
 	 }
 	 
 	 public void grow(){
+		 
 		 Shape shape = body.getFixtureList().first().getShape();
-		 shape.setRadius(shape.getRadius() + 0.01f);
+		 shape.setRadius(shape.getRadius() + 0.02f);
+		 getUserData().afterEat();
 	 }
 }

@@ -4,12 +4,13 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.evo.game.box2d.FoodUserData;
+import com.evo.game.box2d.RunnerUserData;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.EdgeShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
-import com.evo.game.enums.RunnerUserData;
 
 public class WorldUtils {
 	public static World createWorld() {
@@ -58,9 +59,8 @@ public class WorldUtils {
         CircleShape shape = new CircleShape();
         shape.setRadius(0.2f);
         Body body = world.createBody(bodyDef);
-        body.createFixture(shape, Constants.RUNNER_DENSITY);
+        body.createFixture(shape, 0.0f);
         body.resetMassData();
-        body.setAngularDamping(5);
         body.setUserData(new RunnerUserData());
         shape.dispose();
         return body;
@@ -74,8 +74,9 @@ public class WorldUtils {
         CircleShape shape = new CircleShape();
         shape.setRadius(0.15f);
         Body foodBody = world.createBody(bodyDef);
-        foodBody.createFixture(shape, Constants.RUNNER_DENSITY);
+        foodBody.createFixture(shape, 0.0f);
         foodBody.resetMassData();
+        foodBody.setUserData(new FoodUserData());
         shape.dispose();
         
     	return foodBody;
