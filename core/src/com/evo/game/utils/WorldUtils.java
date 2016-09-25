@@ -52,6 +52,7 @@ public class WorldUtils {
     }
     
     public static Body createRunner(World world) {
+    	
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         bodyDef.position.set(new Vector2(Constants.RUNNER_X, Constants.RUNNER_Y));

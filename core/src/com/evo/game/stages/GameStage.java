@@ -1,4 +1,6 @@
 package com.evo.game.stages;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
@@ -24,8 +26,8 @@ public class GameStage extends Stage{
     public GameStage() {
     	setUpWorld();
     	setupCamera();
+    	Gdx.input.setInputProcessor(this);
         renderer = new Box2DDebugRenderer();
-       
     }
 
     private void setupCamera() {
@@ -61,7 +63,21 @@ public class GameStage extends Stage{
         }
 
         //TODO: Implement interpolation
-
+       
+        if (leftKeyPressed){
+        	runner.turnLeft();
+        }
+        if (rightKeyPressed){
+        	runner.turnRight();
+        }
+        if (upKeyPressed){
+        	runner.moveForward();
+        }
+        else if(!upKeyPressed){
+        	runner.stop();
+        }
+        
+        
     }
 
     @Override
@@ -69,6 +85,41 @@ public class GameStage extends Stage{
         super.draw();
         renderer.render(world, camera.combined);
     }
+    
+    public boolean leftKeyPressed;
+    public boolean upKeyPressed;
+    public boolean rightKeyPressed;
+    @Override
+    public boolean keyDown(int keycode) {
+        if (keycode == Input.Keys.LEFT) {
+            leftKeyPressed = true;
+        }
+        if (keycode == Input.Keys.RIGHT) {
+            rightKeyPressed = true;
+        }
+        if (keycode == Input.Keys.UP) {
+            upKeyPressed = true;
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean keyUp(int keycode) {
+    	 if (keycode == Input.Keys.LEFT) {
+             leftKeyPressed = false;
+         }
+         if (keycode == Input.Keys.RIGHT) {
+             rightKeyPressed = false;
+         }
+         if (keycode == Input.Keys.UP) {
+             upKeyPressed = false;
+         }
+
+        return false;
+    }
+    
+
 
 
 }
