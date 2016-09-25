@@ -29,8 +29,9 @@ public class Runner extends GameActor{
 		 velX = MathUtils.cos(body.getAngle()) * velocity;
 	     velY = MathUtils.sin(body.getAngle())* velocity;
 	     body.setLinearVelocity(velX, velY);
+	     this.setX(body.getPosition().x);
+	     this.setY(body.getPosition().y);
 	 }
-	 
 	 public void stop(){
 		 body.setLinearVelocity(0,0);
 	 }

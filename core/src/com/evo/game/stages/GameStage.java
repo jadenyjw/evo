@@ -32,8 +32,6 @@ public class GameStage extends Stage{
 
     private void setupCamera() {
         camera = new OrthographicCamera(VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
-        camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0f);
-        camera.update();
     }
     
     private void setUpWorld() {
@@ -66,6 +64,11 @@ public class GameStage extends Stage{
         else if(!upKeyPressed){
         	runner.stop();
         }
+        
+        
+        camera.position.set(runner.getX(), runner.getY(), 0);
+        camera.update();
+        
         // Fixed timestep
         accumulator += delta;
 
