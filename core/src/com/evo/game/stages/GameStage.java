@@ -61,7 +61,7 @@ public class GameStage extends Stage implements ContactListener{
         addActor(runner);
     }
     private void setUpFood(){
-    	for (int x = 0; x < 100; x++){
+    	for (int x = 0; x < 200; x++){
     		food = new Food(WorldUtils.createFood(world, (float) Math.random() * (28) + 1, (float)Math.random() * (28) + 1));
     	}
     }
@@ -164,8 +164,7 @@ public class GameStage extends Stage implements ContactListener{
 		Body a = contact.getFixtureA().getBody();
         Body b = contact.getFixtureB().getBody();
         
-        System.out.println(a.getUserData() + " " + b.getUserData());
-        
+
         if ((BodyUtils.bodyIsRunner(a) && BodyUtils.bodyIsFood(b)) || (BodyUtils.bodyIsFood(a) && BodyUtils.bodyIsRunner(b))) {
             
         	if (BodyUtils.bodyIsFood(a)){
