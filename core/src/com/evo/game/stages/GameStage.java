@@ -167,11 +167,11 @@ public class GameStage extends Stage implements ContactListener{
 
         if ((BodyUtils.bodyIsRunner(a) && BodyUtils.bodyIsFood(b)) || (BodyUtils.bodyIsFood(a) && BodyUtils.bodyIsRunner(b))) {
             
-        	if (BodyUtils.bodyIsFood(a) && !(deletedBodies.contains(a))){
+        	if (BodyUtils.bodyIsFood(a) && !(deletedBodies.contains(a, true))){
 			
         		deletedBodies.add(a);
         	}
-        	else if(BodyUtils.bodyIsFood(b) && !(deletedBodies.contains(b))){
+        	else if(BodyUtils.bodyIsFood(b) && !(deletedBodies.contains(b,true))){
         		deletedBodies.add(b);
         	}
         	runner.grow();
