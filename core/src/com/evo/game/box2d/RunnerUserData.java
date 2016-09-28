@@ -23,6 +23,8 @@ public class RunnerUserData extends UserData{
 	public float getRadius(){
 		return radius;
 	}
+	
+	
 	public void afterEat(){
 		radius += 0.02f;
 		velocity = velocity * 0.99f;

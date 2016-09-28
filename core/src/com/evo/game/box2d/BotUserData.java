@@ -19,10 +19,15 @@ public class BotUserData extends UserData {
 	public float getRadius(){
 		return radius;
 	}
+	public float getVelocity() {
+        return velocity;
+    }
+	
 	public void afterEat(){
 		radius += 0.02f;
 		velocity = velocity * 0.99f;
 	}
+	
 	
 	public void setID(int id){
 		userID = id;
@@ -31,4 +36,5 @@ public class BotUserData extends UserData {
 	public int getID(){
 		return userID;
 	}
+	
 }

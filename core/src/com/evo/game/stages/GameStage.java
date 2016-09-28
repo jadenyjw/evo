@@ -170,21 +170,21 @@ public class GameStage extends Stage implements ContactListener{
 	@Override
 	public void beginContact(Contact contact) {
 		
+		
 		Body a = contact.getFixtureA().getBody();
         Body b = contact.getFixtureB().getBody();
-        
+        System.out.println(a + "" + b);
 
         if ((BodyUtils.bodyIsRunner(a) && BodyUtils.bodyIsFood(b)) || (BodyUtils.bodyIsFood(a) && BodyUtils.bodyIsRunner(b))) {
             
         	if (BodyUtils.bodyIsFood(a) && !(deletedBodies.contains(a, true))){
-			
         		deletedBodies.add(a);
         	}
         	else if(BodyUtils.bodyIsFood(b) && !(deletedBodies.contains(b,true))){
         		deletedBodies.add(b);
         	}
-        	runner.grow();
         	
+        	runner.grow(0.02f);
         	
         }
         

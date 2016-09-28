@@ -14,4 +14,9 @@ public class BodyUtils {
         UserData userData = (UserData) body.getUserData();
         return userData != null && userData.getUserDataType() == UserDataType.FOOD;
     }
+    
+    public static boolean bodyIsBot(Body body) {
+        UserData userData = (UserData) body.getUserData();
+        return userData != null && userData.getUserDataType() == UserDataType.BOT;
+    }
 }

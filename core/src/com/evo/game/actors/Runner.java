@@ -34,7 +34,7 @@ public class Runner extends GameActor{
 		 body.setLinearVelocity(0,0);
 	 }
 	 
-	 public void grow(){
+	 public void grow(float r){
 		 
 		 Shape shape = body.getFixtureList().first().getShape();
 		 shape.setRadius(shape.getRadius() + 0.02f);
