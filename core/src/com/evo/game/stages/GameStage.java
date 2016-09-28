@@ -13,6 +13,7 @@ import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
+import com.evo.game.actors.Bot;
 import com.evo.game.actors.Food;
 import com.evo.game.actors.Runner;
 import com.evo.game.utils.BodyUtils;
@@ -26,6 +27,7 @@ public class GameStage extends Stage implements ContactListener{
     private Body border;
     private Runner runner;
     private Food food;
+    private Bot bot;
     
     private final float TIME_STEP = 1 / 300f;
     private float accumulator = 0f;
@@ -51,6 +53,7 @@ public class GameStage extends Stage implements ContactListener{
         setUpBorder();
         setUpFood();
         setUpRunner();
+        setUpBots();
     }
     
     private void setUpBorder() {
@@ -63,6 +66,12 @@ public class GameStage extends Stage implements ContactListener{
     private void setUpFood(){
     	for (int x = 0; x < 200; x++){
     		food = new Food(WorldUtils.createFood(world, (float) Math.random() * (28) + 1, (float)Math.random() * (28) + 1));
+    	}
+    }
+    private void setUpBots(){
+    	for (int x = 0; x < 10; x++){
+    		bot = new Bot(WorldUtils.createBot(world, (float) Math.random() * (28) + 1, (float)Math.random() * (28) + 1));
+    		bot.getUserData().setID(x);
     	}
     }
     

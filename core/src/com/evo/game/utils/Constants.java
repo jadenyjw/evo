@@ -3,8 +3,8 @@ package com.evo.game.utils;
 import com.badlogic.gdx.math.Vector2;
 
 public class Constants {
-	public static final int APP_WIDTH = 1200;
-    public static final int APP_HEIGHT = 800;
+	public static final int APP_WIDTH = 1366;
+    public static final int APP_HEIGHT = 768;
     
     public static final float WORLD_WIDTH = 30f;
     public static final float WORLD_HEIGHT = 30f;

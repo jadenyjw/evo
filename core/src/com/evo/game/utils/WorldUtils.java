@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.evo.game.box2d.BotUserData;
 import com.evo.game.box2d.FoodUserData;
 import com.evo.game.box2d.RunnerUserData;
 import com.badlogic.gdx.physics.box2d.CircleShape;
@@ -64,6 +65,22 @@ public class WorldUtils {
         body.setUserData(new RunnerUserData());
         shape.dispose();
         return body;
+    }
+    
+public static Body createBot(World world, float x, float y) {
+    	
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.DynamicBody;
+        bodyDef.position.set(new Vector2(x, y));
+        CircleShape shape = new CircleShape();
+        shape.setRadius(0.2f);
+        Body body = world.createBody(bodyDef);
+        body.createFixture(shape, 0.0f);
+        body.resetMassData();
+        body.setUserData(new BotUserData());
+        shape.dispose();
+        return body;
+        
     }
     
     public static Body createFood(World world, float x, float y){

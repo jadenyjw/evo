@@ -2,22 +2,18 @@ package com.evo.game.box2d;
 
 import com.evo.game.enums.UserDataType;
 
-public class RunnerUserData extends UserData{
-
+public class BotUserData extends UserData {
+	
 	private float velocity;
 	private float radius;
+	private int userID;
 	
-	public RunnerUserData() {
+	
+	public BotUserData() {
         super();
-        
         velocity = 5f;
         radius = 0.2f;
-        
-        userDataType = UserDataType.RUNNER;
-    }
-	
-	public float getVelocity() {
-        return velocity;
+        userDataType = UserDataType.BOT;
     }
 	
 	public float getRadius(){
@@ -28,4 +24,11 @@ public class RunnerUserData extends UserData{
 		velocity = velocity * 0.99f;
 	}
 	
+	public void setID(int id){
+		userID = id;
+	}
+	
+	public int getID(){
+		return userID;
+	}
 }
