@@ -7,12 +7,13 @@ public class RunnerUserData extends UserData{
 	private float velocity;
 	private float radius;
 	
+	
+	
 	public RunnerUserData() {
         super();
         
         velocity = 5f;
         radius = 0.2f;
-        
         userDataType = UserDataType.RUNNER;
     }
 	
@@ -24,10 +25,12 @@ public class RunnerUserData extends UserData{
 		return radius;
 	}
 	
-	
 	public void afterEat(){
 		radius += 0.02f;
 		velocity = velocity * 0.99f;
 	}
 	
-}
+	
+	
+		
+	}

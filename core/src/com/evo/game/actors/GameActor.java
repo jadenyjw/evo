@@ -4,8 +4,8 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.evo.game.box2d.UserData;
 public abstract class GameActor extends Actor {
 	
-	 protected Body body;
-	 protected UserData userData;
+	 public Body body;
+	 public UserData userData;
 	 
 	    public GameActor(Body body) {
 	        this.body = body;

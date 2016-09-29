@@ -8,6 +8,15 @@ public class BotUserData extends UserData {
 	private float radius;
 	private int id;
 	
+	private float distanceToNearestPlayer;
+	private float angleToNearestPlayer;
+	private float sizeOfNearestPlayer;
+	
+	private float distanceToNearestFood;
+	private float angleToNearestFood;
+	
+	
+	
 	public BotUserData() {
         super();
         velocity = 5f;
@@ -31,6 +40,33 @@ public class BotUserData extends UserData {
 	}
 	public int getID(){
 		return id;
+	}
+	
+	//Neural Network Inputs
+
+	public float getDistanceToNearestPlayer(){
+		
+		return distanceToNearestPlayer;
+		
+	}
+	
+	public float getAngleToNearestPlayer(){
+		
+			return angleToNearestPlayer;
+	}
+	public float getSizeOfNearestPlayer(){
+		
+		return sizeOfNearestPlayer;
+	}
+	
+	public float getDistanceToNearestFood(){
+		
+		return distanceToNearestFood;
+	}
+	
+	public float getAngleToNearestFood(){
+		
+			return angleToNearestFood;
 	}
 	
 	

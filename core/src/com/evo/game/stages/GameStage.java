@@ -7,6 +7,7 @@ import com.evo.game.box2d.BotUserData;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.Contact;
@@ -97,15 +98,22 @@ public class GameStage extends Stage implements ContactListener{
         for (Body body : deletedBodies) {
             update(body);
         }
+        
+        //Calculate for neural network
+        
+        System.out.println(calculateAngle(runner.body,bot.get(2).body));
+        
+        
+        //Input keys
         if (leftKeyPressed){
         	runner.turnLeft();
         }
         if (rightKeyPressed){
         	runner.turnRight();
         }
+        
         if (upKeyPressed){
         	runner.moveForward();
-        	//runner.grow();
         }
         else if(!upKeyPressed){
         	runner.stop();
@@ -126,7 +134,7 @@ public class GameStage extends Stage implements ContactListener{
 
         //TODO: Implement interpolation
        
-       
+ 
         
         
     }
@@ -137,9 +145,31 @@ public class GameStage extends Stage implements ContactListener{
         renderer.render(world, camera.combined);
     }
     
+    //Calculation methods
 
+    public float calculateDistance(Body a, Body target ){
+    	
+    	Vector2 position1 = a.getPosition();
+    	Vector2 position2 = target.getPosition();
+
+
+    	return position1.dst(position2);
     
+    }
     
+    public float calculateAngle(Body a, Body target){
+        
+    	return 0.0f;
+    	//todo
+   
+    }
+    
+    public float calculateSize(Body target){
+    	return target.getFixtureList().first().getShape().getRadius();
+  
+    }
+    
+
     public boolean leftKeyPressed;
     public boolean upKeyPressed;
     public boolean rightKeyPressed;
@@ -254,11 +284,12 @@ public class GameStage extends Stage implements ContactListener{
         		
                 if (((BotUserData) a.getUserData()).getRadius() < ((BotUserData) b.getUserData()).getRadius()){
         		  deletedBodies.add(a);
+        		  bot.removeIndex(((BotUserData) a.getUserData()).getID());
 
                 }
-                else if(((BotUserData) a.getUserData()).getRadius() > runner.getUserData().getRadius()){
+                else if(((BotUserData) a.getUserData()).getRadius() > ((BotUserData) b.getUserData()).getRadius()){
                 	deletedBodies.add(b);
- 
+                	bot.removeIndex(((BotUserData) b.getUserData()).getID());
                 }
         		
         	}
@@ -266,9 +297,12 @@ public class GameStage extends Stage implements ContactListener{
  
         		if (((BotUserData) b.getUserData()).getRadius() < ((BotUserData) a.getUserData()).getRadius()){
         		  deletedBodies.add(b);
+        		  bot.removeIndex(((BotUserData) b.getUserData()).getID());
         		}
         		else if(((BotUserData) b.getUserData()).getRadius() > ((BotUserData) a.getUserData()).getRadius()){
+        	      
                   deletedBodies.add(a);
+                  bot.removeIndex(((BotUserData) a.getUserData()).getID());
    
                 }
         	}
