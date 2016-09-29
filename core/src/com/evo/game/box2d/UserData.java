@@ -6,6 +6,7 @@ public abstract class UserData {
 	
 	protected UserDataType userDataType;
 
+    
     public UserData() {
 
     }
@@ -13,5 +14,6 @@ public abstract class UserData {
     public UserDataType getUserDataType() {
         return userDataType;
     }
+
 
 }

@@ -19,4 +19,6 @@ public class BodyUtils {
         UserData userData = (UserData) body.getUserData();
         return userData != null && userData.getUserDataType() == UserDataType.BOT;
     }
+    
+   
 }

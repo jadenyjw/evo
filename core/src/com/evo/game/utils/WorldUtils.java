@@ -74,12 +74,12 @@ public static Body createBot(World world, float x, float y) {
         bodyDef.position.set(new Vector2(x, y));
         CircleShape shape = new CircleShape();
         shape.setRadius(0.2f);
-        Body body = world.createBody(bodyDef);
-        body.createFixture(shape, 0.0f);
-        body.resetMassData();
-        body.setUserData(new BotUserData());
+        Body botBody = world.createBody(bodyDef);
+        botBody.createFixture(shape, 0.0f);
+        botBody.resetMassData();
+        botBody.setUserData(new BotUserData());
         shape.dispose();
-        return body;
+        return botBody;
         
     }
     

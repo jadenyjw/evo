@@ -6,8 +6,7 @@ public class BotUserData extends UserData {
 	
 	private float velocity;
 	private float radius;
-	private int userID;
-	
+	private int id;
 	
 	public BotUserData() {
         super();
@@ -27,14 +26,12 @@ public class BotUserData extends UserData {
 		radius += 0.02f;
 		velocity = velocity * 0.99f;
 	}
-	
-	
-	public void setID(int id){
-		userID = id;
+	public void setID(int i){
+		id = i;
 	}
-	
 	public int getID(){
-		return userID;
+		return id;
 	}
+	
 	
 }

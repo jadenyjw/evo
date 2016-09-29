@@ -35,7 +35,6 @@ public class Runner extends GameActor{
 	 }
 	 
 	 public void grow(float r){
-		 
 		 Shape shape = body.getFixtureList().first().getShape();
 		 shape.setRadius(shape.getRadius() + 0.02f);
 		 getUserData().afterEat();

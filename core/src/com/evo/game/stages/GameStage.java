@@ -1,5 +1,8 @@
 package com.evo.game.stages;
-import java.util.Iterator;
+
+
+import com.evo.game.box2d.BotUserData;
+
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -18,6 +21,8 @@ import com.evo.game.actors.Food;
 import com.evo.game.actors.Runner;
 import com.evo.game.utils.BodyUtils;
 import com.evo.game.utils.WorldUtils;
+
+
 public class GameStage extends Stage implements ContactListener{
 	 // This will be our viewport measurements while working with the debug renderer
     private static final int VIEWPORT_WIDTH = 20;
@@ -27,7 +32,7 @@ public class GameStage extends Stage implements ContactListener{
     private Body border;
     private Runner runner;
     private Food food;
-    private Bot bot;
+    private Array<Bot> bot = new Array<Bot>();
     
     private final float TIME_STEP = 1 / 300f;
     private float accumulator = 0f;
@@ -70,8 +75,11 @@ public class GameStage extends Stage implements ContactListener{
     }
     private void setUpBots(){
     	for (int x = 0; x < 10; x++){
-    		bot = new Bot(WorldUtils.createBot(world, (float) Math.random() * (28) + 1, (float)Math.random() * (28) + 1));
-    		bot.getUserData().setID(x);
+    		
+    	
+    		bot.add(new Bot(WorldUtils.createBot(world, (float) Math.random() * (28) + 1, (float)Math.random() * (28) + 1)));
+    		//bot[x].getUserData().setID(x);
+    		
     	}
     }
     
@@ -106,6 +114,7 @@ public class GameStage extends Stage implements ContactListener{
         
         camera.position.set(runner.getX(), runner.getY(), 0);
         camera.update();
+        
         
         // Fixed timestep
         accumulator += delta;
@@ -173,11 +182,12 @@ public class GameStage extends Stage implements ContactListener{
 		
 		Body a = contact.getFixtureA().getBody();
         Body b = contact.getFixtureB().getBody();
-        System.out.println(a + "" + b);
 
+		   
         if ((BodyUtils.bodyIsRunner(a) && BodyUtils.bodyIsFood(b)) || (BodyUtils.bodyIsFood(a) && BodyUtils.bodyIsRunner(b))) {
             
         	if (BodyUtils.bodyIsFood(a) && !(deletedBodies.contains(a, true))){
+        	   
         		deletedBodies.add(a);
         	}
         	else if(BodyUtils.bodyIsFood(b) && !(deletedBodies.contains(b,true))){
@@ -187,6 +197,44 @@ public class GameStage extends Stage implements ContactListener{
         	runner.grow(0.02f);
         	
         }
+       if ((BodyUtils.bodyIsBot(a) && BodyUtils.bodyIsFood(b)) || (BodyUtils.bodyIsFood(a) && BodyUtils.bodyIsBot(b))) {
+            
+        	if (BodyUtils.bodyIsFood(a) && !(deletedBodies.contains(a, true))){
+        		
+        		deletedBodies.add(a);
+        		bot.get(((BotUserData) (b.getUserData())).getID()).grow(0.02f);
+        		
+        	}
+        	else if(BodyUtils.bodyIsFood(b) && !(deletedBodies.contains(b,true))){
+        		
+        		
+        		deletedBodies.add(b);
+        		bot.get(((BotUserData) (a.getUserData())).getID()).grow(0.02f);
+        	}
+        	
+        	
+        	
+        }
+        
+        if ((BodyUtils.bodyIsRunner(a) && BodyUtils.bodyIsBot(b)) || (BodyUtils.bodyIsBot(a) && BodyUtils.bodyIsRunner(b))) {
+            
+        	if (BodyUtils.bodyIsBot(a) && !(deletedBodies.contains(a, true))){
+                if (((BotUserData) a.getUserData()).getRadius() < runner.getUserData().getRadius()){
+        		  deletedBodies.add(a);
+                }
+        		
+        	}
+        	else if(BodyUtils.bodyIsBot(b) && !(deletedBodies.contains(b,true))){
+        		if (((BotUserData) b.getUserData()).getRadius() < runner.getUserData().getRadius()){
+        		  deletedBodies.add(b);
+        		}
+        	}
+        	
+        	//runner.grow(0.02f);
+        	
+        }
+        
+  
         
          
             
