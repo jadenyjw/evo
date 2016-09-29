@@ -45,28 +45,36 @@ public class BotUserData extends UserData {
 	//Neural Network Inputs
 
 	public float getDistanceToNearestPlayer(){
-		
 		return distanceToNearestPlayer;
-		
 	}
-	
 	public float getAngleToNearestPlayer(){
-		
 			return angleToNearestPlayer;
 	}
 	public float getSizeOfNearestPlayer(){
-		
 		return sizeOfNearestPlayer;
 	}
-	
 	public float getDistanceToNearestFood(){
-		
 		return distanceToNearestFood;
 	}
-	
 	public float getAngleToNearestFood(){
-		
 			return angleToNearestFood;
+	}
+	
+	
+	public void setDistanceToNearestPlayer(float f){
+		distanceToNearestPlayer = f;
+	}
+	public void setAngleToNearestPlayer(float f){
+			 angleToNearestPlayer = f;
+	}
+	public void setSizeOfNearestPlayer(float f){
+		sizeOfNearestPlayer = f;
+	}
+	public void setDistanceToNearestFood(float f){
+		 distanceToNearestFood = f;
+	}
+	public void setAngleToNearestFood(float f){
+			 angleToNearestFood = f;
 	}
 	
 	
