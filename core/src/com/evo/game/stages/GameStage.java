@@ -7,6 +7,7 @@ import com.evo.game.box2d.BotUserData;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
@@ -101,7 +102,8 @@ public class GameStage extends Stage implements ContactListener{
         
         //Calculate for neural network
         
-        System.out.println(calculateAngle(runner.body,bot.get(2).body));
+        if (bot.get(2).body.isActive()) System.out.println(calculateAngle(runner.body,bot.get(2).body));
+        
         
         
         //Input keys
@@ -159,9 +161,14 @@ public class GameStage extends Stage implements ContactListener{
     
     public float calculateAngle(Body a, Body target){
         
-    	return 0.0f;
-    	//todo
-   
+    	Vector2 position1 = a.getPosition();
+    	Vector2 position2 = target.getPosition();
+        
+    	float angleOfa = a.getAngle();
+        float angleOfvector = position1.angleRad(position2);
+        
+    	return (float) Math.abs(angleOfvector - angleOfa % (MathUtils.PI));
+    
     }
     
     public float calculateSize(Body target){
