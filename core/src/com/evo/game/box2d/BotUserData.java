@@ -10,6 +10,8 @@ public class BotUserData extends UserData {
 	
 	private float distanceToNearestPlayer;
 	private float angleToNearestPlayer;
+	
+	// In the actual Neural Network, this will be a binary input, whether it is bigger or not.
 	private float sizeOfNearestPlayer;
 	
 	private float distanceToNearestFood;

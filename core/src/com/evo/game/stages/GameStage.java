@@ -165,7 +165,8 @@ public class GameStage extends Stage implements ContactListener {
 		}
 		
 		
-		System.out.println(((BotUserData) bot.get(1).getUserData()).getDistanceToNearestPlayer());
+		//System.out.println(((BotUserData) bot.get(1).getUserData()).getDistanceToNearestPlayer());
+		//System.out.println(((BotUserData) bot.get(1).getUserData()).getAngleToNearestPlayer());
 
 		// Input keys
 		if (leftKeyPressed) {
@@ -221,7 +222,7 @@ public class GameStage extends Stage implements ContactListener {
 		float angleOfa = a.getAngle();
 		float angleOfvector = position1.angleRad(position2);
 
-		return (float) Math.abs(angleOfvector - angleOfa % (MathUtils.PI));
+		return (float) angleOfvector - angleOfa % (MathUtils.PI);
 
 	}
 
