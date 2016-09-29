@@ -10,8 +10,7 @@ public class BotUserData extends UserData {
 	
 	private float distanceToNearestPlayer;
 	private float angleToNearestPlayer;
-	
-	// In the actual Neural Network, this will be a binary input, whether it is bigger or not.
+
 	private float sizeOfNearestPlayer;
 	
 	private float distanceToNearestFood;
@@ -35,7 +34,7 @@ public class BotUserData extends UserData {
 	
 	public void afterEat(){
 		radius += 0.02f;
-		velocity = velocity * 0.99f;
+		velocity = velocity * 0.999f;
 	}
 	public void setID(int i){
 		id = i;

@@ -23,6 +23,7 @@ import com.evo.game.utils.BodyUtils;
 import com.evo.game.utils.WorldUtils;
 
 public class GameStage extends Stage implements ContactListener {
+	
 	// This will be our viewport measurements while working with the debug
 	// renderer
 	private static final int VIEWPORT_WIDTH = 20;
