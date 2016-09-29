@@ -75,10 +75,9 @@ public class GameStage extends Stage implements ContactListener{
     }
     private void setUpBots(){
     	for (int x = 0; x < 10; x++){
-    		
-    	
+  
     		bot.add(new Bot(WorldUtils.createBot(world, (float) Math.random() * (28) + 1, (float)Math.random() * (28) + 1)));
-    		//bot[x].getUserData().setID(x);
+    		bot.get(x).getUserData().setID(x);
     		
     	}
     }
@@ -217,20 +216,62 @@ public class GameStage extends Stage implements ContactListener{
         }
         
         if ((BodyUtils.bodyIsRunner(a) && BodyUtils.bodyIsBot(b)) || (BodyUtils.bodyIsBot(a) && BodyUtils.bodyIsRunner(b))) {
+        	
+        	
             
         	if (BodyUtils.bodyIsBot(a) && !(deletedBodies.contains(a, true))){
+        		System.out.println(((BotUserData) (a.getUserData())).getID());
                 if (((BotUserData) a.getUserData()).getRadius() < runner.getUserData().getRadius()){
         		  deletedBodies.add(a);
+        		  runner.grow(0.02f);
+                }
+                else if(((BotUserData) a.getUserData()).getRadius() > runner.getUserData().getRadius()){
+                	deletedBodies.add(b);
+                	runner.remove();
                 }
         		
         	}
         	else if(BodyUtils.bodyIsBot(b) && !(deletedBodies.contains(b,true))){
+        		System.out.println(((BotUserData) (b.getUserData())).getID());
         		if (((BotUserData) b.getUserData()).getRadius() < runner.getUserData().getRadius()){
         		  deletedBodies.add(b);
+        		  runner.grow(0.02f);
         		}
+        		else if(((BotUserData) b.getUserData()).getRadius() > runner.getUserData().getRadius()){
+                	deletedBodies.add(a);
+                	runner.remove();
+                }
         	}
         	
-        	//runner.grow(0.02f);
+        }
+        
+       if ((BodyUtils.bodyIsBot(a) && BodyUtils.bodyIsBot(b)) || (BodyUtils.bodyIsBot(a) && BodyUtils.bodyIsBot(b))) {
+        	
+        	
+            
+        	if (BodyUtils.bodyIsBot(a) && !(deletedBodies.contains(a, true))){
+        		System.out.println(((BotUserData) (a.getUserData())).getID());
+        		
+                if (((BotUserData) a.getUserData()).getRadius() < ((BotUserData) b.getUserData()).getRadius()){
+        		  deletedBodies.add(a);
+
+                }
+                else if(((BotUserData) a.getUserData()).getRadius() > runner.getUserData().getRadius()){
+                	deletedBodies.add(b);
+ 
+                }
+        		
+        	}
+        	else if(BodyUtils.bodyIsBot(b) && !(deletedBodies.contains(b,true))){
+ 
+        		if (((BotUserData) b.getUserData()).getRadius() < ((BotUserData) a.getUserData()).getRadius()){
+        		  deletedBodies.add(b);
+        		}
+        		else if(((BotUserData) b.getUserData()).getRadius() > ((BotUserData) a.getUserData()).getRadius()){
+                  deletedBodies.add(a);
+   
+                }
+        	}
         	
         }
         
