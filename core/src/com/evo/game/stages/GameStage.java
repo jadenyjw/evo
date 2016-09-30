@@ -1,6 +1,7 @@
 package com.evo.game.stages;
 
 import com.evo.game.box2d.BotUserData;
+import com.evo.game.box2d.FoodUserData;
 
 import java.io.File;
 
@@ -58,6 +59,7 @@ public class GameStage extends Stage implements ContactListener {
 	
 	
 	private Label generationLabel = new Label("Generation", skin);
+	private Label botsLabel = new Label("Bots Left", skin);
 	
     
 	public GameStage() {
@@ -93,6 +95,7 @@ public class GameStage extends Stage implements ContactListener {
 	private void setUpFood() {
 		for (int x = 0; x < 200; x++) {
 			food.add(new Food(WorldUtils.createFood(world, (float) Math.random() * (28) + 1, (float) Math.random() * (28) + 1)));
+			food.get(x).getUserData().setID(x);
 		}
 	}
 	
@@ -101,8 +104,12 @@ public class GameStage extends Stage implements ContactListener {
 		generationLabel.setColor(Color.WHITE);
 		generationLabel.setText("Generation: " + generation);
 		
+		botsLabel.setPosition(20f, 40f);
+		botsLabel.setColor(Color.WHITE);
+		botsLabel.setText("Bots Left: " + bot.size);
 		
 		addActor(generationLabel);
+		addActor(botsLabel);
 	}
 
 	private void setUpBots() {
@@ -118,7 +125,16 @@ public class GameStage extends Stage implements ContactListener {
 	
 
 	private void update(Body body) {
+		/*
+		if (BodyUtils.bodyIsBot(body)){
+		  bot.removeIndex(((BotUserData) body.getUserData()).getID());
+		}
+		if(BodyUtils.bodyIsFood(body)){
+		  food.removeIndex(((FoodUserData) body.getUserData()).getID());
+		}
+		*/
 		deletedBodies.removeValue(body, true);
+		
 		world.destroyBody(body);
 
 	}
@@ -131,6 +147,8 @@ public class GameStage extends Stage implements ContactListener {
 		for (Body body : deletedBodies) {
 			update(body);
 		}
+		
+		botsLabel.setText("Bots Left: " + bodySize(bot));
         
 		boolean allDead = false;
 		// Calculate for neural network
@@ -261,6 +279,14 @@ public class GameStage extends Stage implements ContactListener {
 		return target.getFixtureList().first().getShape().getRadius();
 
 	}
+	
+	public int bodySize(Array<Bot> b){
+		int size = 0;
+		for (int x = 0; x < b.size; x++){
+			if (b.get(x).body.isActive()) size++;
+		}
+		return size;
+	}
 
 	public boolean leftKeyPressed;
 	public boolean upKeyPressed;
@@ -335,26 +361,32 @@ public class GameStage extends Stage implements ContactListener {
 				|| (BodyUtils.bodyIsBot(a) && BodyUtils.bodyIsRunner(b))) {
 
 			if (BodyUtils.bodyIsBot(a) && !(deletedBodies.contains(a, true))) {
-				System.out.println(((BotUserData) (a.getUserData())).getID());
+
 				if (((BotUserData) a.getUserData()).getRadius() < runner.getUserData().getRadius()) {
 					deletedBodies.add(a);
+
 					runner.grow(0.02f);
+					
 				} else if (((BotUserData) a.getUserData()).getRadius() > runner.getUserData().getRadius()) {
 					deletedBodies.add(b);
 					runner.remove();
+					bot.get(((BotUserData) a.getUserData()).getID()).grow(0.02f);
 				}
 
 			} else if (BodyUtils.bodyIsBot(b) && !(deletedBodies.contains(b, true))) {
-				System.out.println(((BotUserData) (b.getUserData())).getID());
+			
+				
 				if (((BotUserData) b.getUserData()).getRadius() < runner.getUserData().getRadius()) {
 					deletedBodies.add(b);
+
 					runner.grow(0.02f);
 				} else if (((BotUserData) b.getUserData()).getRadius() > runner.getUserData().getRadius()) {
 					deletedBodies.add(a);
 					runner.remove();
+					bot.get(((BotUserData) b.getUserData()).getID()).grow(0.02f);
 				}
 			}
-
+			
 		}
 
 		if ((BodyUtils.bodyIsBot(a) && BodyUtils.bodyIsBot(b)) || (BodyUtils.bodyIsBot(a) && BodyUtils.bodyIsBot(b))) {
@@ -364,28 +396,33 @@ public class GameStage extends Stage implements ContactListener {
 
 				if (((BotUserData) a.getUserData()).getRadius() < ((BotUserData) b.getUserData()).getRadius()) {
 					deletedBodies.add(a);
-					bot.removeIndex(((BotUserData) a.getUserData()).getID());
+					
+					bot.get(((BotUserData) b.getUserData()).getID()).grow(0.02f);
 
 				} else if (((BotUserData) a.getUserData()).getRadius() > ((BotUserData) b.getUserData()).getRadius()) {
 					deletedBodies.add(b);
-					bot.removeIndex(((BotUserData) b.getUserData()).getID());
+
+					bot.get(((BotUserData) a.getUserData()).getID()).grow(0.02f);
 				}
 
 			} else if (BodyUtils.bodyIsBot(b) && !(deletedBodies.contains(b, true))) {
 
 				if (((BotUserData) b.getUserData()).getRadius() < ((BotUserData) a.getUserData()).getRadius()) {
 					deletedBodies.add(b);
-					bot.removeIndex(((BotUserData) b.getUserData()).getID());
+	
+					bot.get(((BotUserData) a.getUserData()).getID()).grow(0.02f);
 				} else if (((BotUserData) b.getUserData()).getRadius() > ((BotUserData) a.getUserData()).getRadius()) {
 
 					deletedBodies.add(a);
-					bot.removeIndex(((BotUserData) a.getUserData()).getID());
+
+					bot.get(((BotUserData) b.getUserData()).getID()).grow(0.02f);
 
 				}
 			}
-
+         
 		}
 
+		
 	}
 
 	@Override
