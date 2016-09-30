@@ -172,12 +172,11 @@ public class GameStage extends Stage implements ContactListener {
 		if (allDead){
 			if (runner.body.isActive() && bodySize(bot) == 0){
 				messageLabel.setText("You won this round!");
-				generation++;
-				setUpWorld();
-				setupCamera();
-				allDead = false;
 			}
-			
+			generation++;
+			setUpWorld();
+			setupCamera();
+			allDead = false;
 		}
 		else{
 		
@@ -401,7 +400,9 @@ public class GameStage extends Stage implements ContactListener {
 				} else if (((BotUserData) a.getUserData()).getRadius() > runner.getUserData().getRadius()) {
 					deletedBodies.add(b);
 					runner.remove();
+					messageLabel.setText("You lost this round!");
 					bot.get(((BotUserData) a.getUserData()).getID()).grow(0.02f);
+					
 				}
 
 			} else if (BodyUtils.bodyIsBot(b) && !(deletedBodies.contains(b, true))) {
@@ -414,6 +415,7 @@ public class GameStage extends Stage implements ContactListener {
 				} else if (((BotUserData) b.getUserData()).getRadius() > runner.getUserData().getRadius()) {
 					deletedBodies.add(a);
 					runner.remove();
+					messageLabel.setText("You lost this round!");
 					bot.get(((BotUserData) b.getUserData()).getID()).grow(0.02f);
 				}
 			}
