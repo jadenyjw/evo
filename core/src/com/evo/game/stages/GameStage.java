@@ -31,6 +31,8 @@ import com.evo.game.actors.Food;
 import com.evo.game.actors.Runner;
 import com.evo.game.utils.BodyUtils;
 import com.evo.game.utils.WorldUtils;
+import com.evo.genetics.Gene;
+import com.evo.networks.Network;
 
 public class GameStage extends Stage implements ContactListener {
 	
@@ -57,7 +59,7 @@ public class GameStage extends Stage implements ContactListener {
 	
 	private boolean allDead = false;
 	
-	private FileHandle filehandle = new FileHandle(new File("skin/uiskin.json"));
+	private FileHandle filehandle = Gdx.files.internal("assets/skin/uiskin.json");
 	private Skin skin = new Skin(filehandle);
 	
 	
@@ -128,9 +130,10 @@ public class GameStage extends Stage implements ContactListener {
 
 	private void setUpBots() {
 		for (int x = 0; x < 10; x++) {
-
+            Gene gene = new Gene();
+            Network network = new Network();
 			bot.add(new Bot(
-					WorldUtils.createBot(world, (float) Math.random() * (28) + 1, (float) Math.random() * (28) + 1)));
+					WorldUtils.createBot(world, (float) Math.random() * (28) + 1, (float) Math.random() * (28) + 1), gene, network));
 			bot.get(x).getUserData().setID(x);
 
 		}

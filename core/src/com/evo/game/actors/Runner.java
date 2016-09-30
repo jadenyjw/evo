@@ -3,11 +3,15 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.evo.game.box2d.RunnerUserData;
+import com.evo.genetics.Gene;
 public class Runner extends GameActor{
 
 
 	float velX; 
 	float velY;
+	
+	
+	
 	
 	 public Runner(Body body) {
 	        super(body);

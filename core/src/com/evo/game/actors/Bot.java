@@ -4,23 +4,28 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.evo.game.box2d.BotUserData;
+import com.evo.genetics.Gene;
+import com.evo.networks.Network;
 
 
 public class Bot extends GameActor{
 
 	float velX; 
 	float velY;
+	public Gene gene;
+	public Network network;
 	
-	public Bot(Body body) {
+	public Bot(Body body, Gene gene, Network network) {
         super(body);
+        this.network = network;
+        this.gene = gene;
+     
     }
 
 	@Override
 	 public BotUserData getUserData(){
 		 return (BotUserData) userData;
 	 }
-	
-
 	
 	 public void turnRight(){
 		 body.setTransform(body.getPosition(), body.getAngle() - 0.1f);	 
