@@ -2,9 +2,14 @@ package com.evo.game.stages;
 
 import com.evo.game.box2d.BotUserData;
 
+import java.io.File;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -15,6 +20,8 @@ import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Array;
 import com.evo.game.actors.Bot;
 import com.evo.game.actors.Food;
@@ -32,7 +39,7 @@ public class GameStage extends Stage implements ContactListener {
 	private World world;
 	private Body border;
 	private Runner runner;
-	private Food food;
+	private Array<Food> food = new Array<Food>();
 	private Array<Bot> bot = new Array<Bot>();
 
 	private final float TIME_STEP = 1 / 300f;
@@ -42,7 +49,17 @@ public class GameStage extends Stage implements ContactListener {
 	private Box2DDebugRenderer renderer;
 	private Array<Body> deletedBodies = new Array<Body>();
 	private Array<Body> bodies = new Array<Body>();
-
+	
+	private int generation = 1;
+	
+	
+	private FileHandle filehandle = new FileHandle(new File("skin/uiskin.json"));
+	private Skin skin = new Skin(filehandle);
+	
+	
+	private Label generationLabel = new Label("Generation", skin);
+	
+    
 	public GameStage() {
 		setUpWorld();
 		setupCamera();
@@ -61,6 +78,7 @@ public class GameStage extends Stage implements ContactListener {
 		setUpFood();
 		setUpRunner();
 		setUpBots();
+		setUpText();
 	}
 
 	private void setUpBorder() {
@@ -74,9 +92,17 @@ public class GameStage extends Stage implements ContactListener {
 
 	private void setUpFood() {
 		for (int x = 0; x < 200; x++) {
-			food = new Food(
-					WorldUtils.createFood(world, (float) Math.random() * (28) + 1, (float) Math.random() * (28) + 1));
+			food.add(new Food(WorldUtils.createFood(world, (float) Math.random() * (28) + 1, (float) Math.random() * (28) + 1)));
 		}
+	}
+	
+	private void setUpText(){
+		generationLabel.setPosition(20f, 20f);
+		generationLabel.setColor(Color.WHITE);
+		generationLabel.setText("Generation: " + generation);
+		
+		
+		addActor(generationLabel);
 	}
 
 	private void setUpBots() {
@@ -88,6 +114,8 @@ public class GameStage extends Stage implements ContactListener {
 
 		}
 	}
+	
+	
 
 	private void update(Body body) {
 		deletedBodies.removeValue(body, true);
@@ -99,10 +127,12 @@ public class GameStage extends Stage implements ContactListener {
 	public void act(float delta) {
 
 		super.act(delta);
+		
 		for (Body body : deletedBodies) {
 			update(body);
 		}
-
+        
+		boolean allDead = false;
 		// Calculate for neural network
 		world.getBodies(bodies);
 
