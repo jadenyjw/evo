@@ -21,9 +21,11 @@ import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Timer;
 import com.evo.game.actors.Bot;
 import com.evo.game.actors.Food;
 import com.evo.game.actors.Runner;
@@ -40,19 +42,20 @@ public class GameStage extends Stage implements ContactListener {
 	private World world;
 	private Body border;
 	private Runner runner;
-	private Array<Food> food = new Array<Food>();
-	private Array<Bot> bot = new Array<Bot>();
+	private Array<Food> food;
+	private Array<Bot> bot;
 
 	private final float TIME_STEP = 1 / 300f;
 	private float accumulator = 0f;
 
 	private OrthographicCamera camera;
 	private Box2DDebugRenderer renderer;
-	private Array<Body> deletedBodies = new Array<Body>();
-	private Array<Body> bodies = new Array<Body>();
+	private Array<Body> deletedBodies;
+	private Array<Body> bodies;
 	
 	private int generation = 1;
 	
+	private boolean allDead = false;
 	
 	private FileHandle filehandle = new FileHandle(new File("skin/uiskin.json"));
 	private Skin skin = new Skin(filehandle);
@@ -60,9 +63,11 @@ public class GameStage extends Stage implements ContactListener {
 	
 	private Label generationLabel = new Label("Generation", skin);
 	private Label botsLabel = new Label("Bots Left", skin);
+	private Label messageLabel = new Label("",skin);
 	
     
 	public GameStage() {
+		
 		setUpWorld();
 		setupCamera();
 		Gdx.input.setInputProcessor(this);
@@ -76,6 +81,10 @@ public class GameStage extends Stage implements ContactListener {
 	private void setUpWorld() {
 		world = WorldUtils.createWorld();
 		world.setContactListener(this);
+		bodies = new Array<Body>();
+		deletedBodies = new Array<Body>();
+		bot = new Array<Bot>();
+		food = new Array<Food>();
 		setUpBorder();
 		setUpFood();
 		setUpRunner();
@@ -108,8 +117,13 @@ public class GameStage extends Stage implements ContactListener {
 		botsLabel.setColor(Color.WHITE);
 		botsLabel.setText("Bots Left: " + bot.size);
 		
+		messageLabel.setPosition(20f, 70f);
+		messageLabel.setColor(Color.WHITE);
+		messageLabel.setText("Game: Active");
+		
 		addActor(generationLabel);
 		addActor(botsLabel);
+		addActor(messageLabel);
 	}
 
 	private void setUpBots() {
@@ -125,14 +139,14 @@ public class GameStage extends Stage implements ContactListener {
 	
 
 	private void update(Body body) {
-		/*
+		
 		if (BodyUtils.bodyIsBot(body)){
-		  bot.removeIndex(((BotUserData) body.getUserData()).getID());
+		  bot.get(((BotUserData) body.getUserData()).getID()).addAction(Actions.removeActor());
 		}
 		if(BodyUtils.bodyIsFood(body)){
-		  food.removeIndex(((FoodUserData) body.getUserData()).getID());
+		  food.get(((FoodUserData) body.getUserData()).getID()).addAction(Actions.removeActor());
 		}
-		*/
+		
 		deletedBodies.removeValue(body, true);
 		
 		world.destroyBody(body);
@@ -150,7 +164,23 @@ public class GameStage extends Stage implements ContactListener {
 		
 		botsLabel.setText("Bots Left: " + bodySize(bot));
         
-		boolean allDead = false;
+		if ((runner.body.isActive() && bodySize(bot) == 0) || (!(runner.body.isActive()) && bodySize(bot) == 1)){
+			allDead = true;
+		}
+		
+		
+		if (allDead){
+			if (runner.body.isActive() && bodySize(bot) == 0){
+				messageLabel.setText("You won this round!");
+				generation++;
+				setUpWorld();
+				setupCamera();
+				allDead = false;
+			}
+			
+		}
+		else{
+		
 		// Calculate for neural network
 		world.getBodies(bodies);
 
@@ -233,6 +263,7 @@ public class GameStage extends Stage implements ContactListener {
 
 		camera.position.set(runner.getX(), runner.getY(), 0);
 		camera.update();
+		}
 
 		// Fixed timestep
 		accumulator += delta;
@@ -243,7 +274,7 @@ public class GameStage extends Stage implements ContactListener {
 		}
 
 		// TODO: Implement interpolation
-
+		
 	}
 
 	@Override
