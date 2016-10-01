@@ -175,6 +175,8 @@ public class GameStage extends Stage implements ContactListener {
 				botBody.setUserData(new BotUserData());
 				bot.get(x).body = botBody;
 				System.out.println(bot.get(x).gene);
+				System.out.println(bot.size);
+				System.out.println(bot.get(x).gene.size);
 				bot.get(x).network.setWeights(bot.get(x).gene);
 
 			}
