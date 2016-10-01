@@ -2,6 +2,8 @@ package com.evo.game.stages;
 
 import com.evo.game.box2d.BotUserData;
 
+import java.util.Random;
+
 import org.encog.ml.data.MLData;
 import org.encog.ml.data.basic.BasicMLData;
 
@@ -140,61 +142,28 @@ public class GameStage extends Stage implements ContactListener {
 	private void setUpBots() {
 
 		if (generation != 1) {
-
-			float totalFitness = 0;
-			float sumProb = 0;
-			float probability = 0;
-			Array<Float> probabilities = new Array<Float>();
-
-			for (int x = 0; x < timeRecord.size; x++) {
-				totalFitness += timeRecord.get(x);
-			}
-
-			for (int x = 0; x < timeRecord.size; x++) {
-
-				probabilities.add(sumProb + ((timeRecord.get(x) / totalFitness)));
-				sumProb += probabilities.get(x);
-
-			}
-
-			Gene fittestGene = new Gene();
-			Gene secondGene = new Gene();
-
-			float rng = (float) Math.random();
-
-			for (int x = 0; x < probabilities.size; x++) {
-				if (probabilities.get(x) == probabilities.size - 1) {
-					if (rng > probabilities.get(x) && rng < 1) {
-						fittestGene = geneRecord.get(x);
-					}
-				}
-				else {
-					if (rng > probabilities.get(x) && rng < probabilities.get(x + 1)) {
-						fittestGene = geneRecord.get(x);
-					}
-				}
-
-			}
+            
+			Random randomno = new Random();
 			
-			rng = (float) Math.random();
-
-			for (int x = 0; x < probabilities.size; x++) {
-				if (probabilities.get(x) == probabilities.size - 1) {
-					
-					if (rng > probabilities.get(x) && rng < 1) {
-						secondGene = geneRecord.get(x);
-					}
+			for (int x = 0; x < geneRecord.size - 1; x++){
+				
+				geneRecord.set(x, geneRecord.get(geneRecord.size - 1));
+				
+				for (int y = 0; y < geneRecord.get(x).size; y++){
+				float uniform = (float) randomno.nextFloat();
+				System.out.println(uniform);
+				  if (geneRecord.get(x).get(y) + uniform > 1){
+					geneRecord.get(x).set(y, geneRecord.get(x).get(y) - uniform);
+				  }
+				  else{
+					geneRecord.get(x).set(y, geneRecord.get(x).get(y) + uniform);  
+				  }
 				}
-				else {
-					if (rng > probabilities.get(x) && rng < probabilities.get(x + 1)) {
-						secondGene = geneRecord.get(x);
-						
-					}
-				}
-
 			}
-			System.out.println(fittestGene);
-			System.out.println(secondGene);
+		
+			
+			
+		
 			
 
 		}
@@ -236,7 +205,7 @@ public class GameStage extends Stage implements ContactListener {
 				botBody.resetMassData();
 				botBody.setUserData(new BotUserData());
 				bot.get(x).body = botBody;
-				bot.get(x).network.setWeights(bot.get(x).gene);
+				//bot.get(x).network.setWeights(bot.get(x).gene);
 
 			}
 
