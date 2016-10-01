@@ -5,7 +5,7 @@ import com.evo.game.enums.UserDataType;
 public class BotUserData extends UserData {
 
 	private float velocity;
-	private float radius;
+	//private float radius;
 	private int id;
 
 	private float distanceToNearestPlayer;
@@ -22,22 +22,23 @@ public class BotUserData extends UserData {
 		
 		super();
 		velocity = 5f;
-		radius = 0.2f;
+		//radius = 0.2f;
 		userDataType = UserDataType.BOT;
 		
 	}
-
+/*
 	public float getRadius() {
 		return radius;
 	}
+	*/
 
 	public float getVelocity() {
 		return velocity;
 	}
 
 	public void afterEat() {
-		radius += 0.02f;
-		velocity = velocity * 0.999f;
+		//radius += 0.02f;
+		velocity = velocity * 0.98f;
 	}
 
 	public void setID(int i) {
@@ -52,7 +53,9 @@ public class BotUserData extends UserData {
 		secondsSurvived = x;
 	}
 	public float getSeconds(){
+		//System.out.println(secondsSurvived);
 		return secondsSurvived;
+		
 	}
 
 	// Neural Network Inputs

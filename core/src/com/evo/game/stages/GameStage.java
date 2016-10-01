@@ -1,9 +1,6 @@
 package com.evo.game.stages;
 
 import com.evo.game.box2d.BotUserData;
-import com.evo.game.box2d.FoodUserData;
-
-import java.io.File;
 
 import org.encog.ml.data.MLData;
 import org.encog.ml.data.basic.BasicMLData;
@@ -26,11 +23,9 @@ import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Timer;
 import com.evo.game.actors.Bot;
 import com.evo.game.actors.Food;
 import com.evo.game.actors.Runner;
@@ -39,8 +34,6 @@ import com.evo.game.utils.Constants;
 import com.evo.game.utils.WorldUtils;
 import com.evo.genetics.Gene;
 import com.evo.networks.Network;
-import com.badlogic.gdx.math.Vector2;
-
 
 public class GameStage extends Stage implements ContactListener {
 
@@ -76,6 +69,9 @@ public class GameStage extends Stage implements ContactListener {
 
 	private float playTime = 0;
 	private float playTimeRounded;
+
+	private Array<Gene> geneRecord = new Array<Gene>();
+	private Array<Float> timeRecord = new Array<Float>();
 
 	public GameStage() {
 
@@ -143,14 +139,74 @@ public class GameStage extends Stage implements ContactListener {
 
 	private void setUpBots() {
 
+		if (generation != 1) {
+
+			float totalFitness = 0;
+			float sumProb = 0;
+			float probability = 0;
+			Array<Float> probabilities = new Array<Float>();
+
+			for (int x = 0; x < timeRecord.size; x++) {
+				totalFitness += timeRecord.get(x);
+			}
+
+			for (int x = 0; x < timeRecord.size; x++) {
+
+				probabilities.add(sumProb + ((timeRecord.get(x) / totalFitness)));
+				sumProb += probabilities.get(x);
+
+			}
+
+			Gene fittestGene = new Gene();
+			Gene secondGene = new Gene();
+
+			float rng = (float) Math.random();
+
+			for (int x = 0; x < probabilities.size; x++) {
+				if (probabilities.get(x) == probabilities.size - 1) {
+					if (rng > probabilities.get(x) && rng < 1) {
+						fittestGene = geneRecord.get(x);
+					}
+				}
+				else {
+					if (rng > probabilities.get(x) && rng < probabilities.get(x + 1)) {
+						fittestGene = geneRecord.get(x);
+					}
+				}
+
+			}
+			
+			rng = (float) Math.random();
+
+			for (int x = 0; x < probabilities.size; x++) {
+				if (probabilities.get(x) == probabilities.size - 1) {
+					
+					if (rng > probabilities.get(x) && rng < 1) {
+						secondGene = geneRecord.get(x);
+					}
+				}
+				else {
+					if (rng > probabilities.get(x) && rng < probabilities.get(x + 1)) {
+						secondGene = geneRecord.get(x);
+						
+					}
+				}
+
+			}
+			System.out.println(fittestGene);
+			System.out.println(secondGene);
+			
+
+		}
+
 		for (int x = 0; x < 10; x++) {
+
 			if (generation == 1) {
 				Gene gene = new Gene();
 				Network network = new Network();
 
-				bot.add(new Bot(
-						WorldUtils.createBot(world, (float) Math.random() * (Constants.SPAWN_RADIUS) + 1, (float) Math.random() * (Constants.SPAWN_RADIUS) + 1),
-						gene, network));
+				bot.add(new Bot(WorldUtils.createBot(world, (float) Math.random() * (Constants.SPAWN_RADIUS) + 1,
+						(float) Math.random() * (Constants.SPAWN_RADIUS) + 1), gene, network));
 				bot.get(x).getUserData().setID(x);
 
 				// Generate a random gene
@@ -160,20 +216,19 @@ public class GameStage extends Stage implements ContactListener {
 					bot.get(x).gene.add((float) Math.random());
 
 				}
-				
+
 				bot.get(x).network.setWeights(bot.get(x).gene);
-				System.out.println(bot.get(x).network.dumpWeights());
-				
-			    }
+				// System.out.println(bot.get(x).network.dumpWeights());
+
+			}
 
 			else {
-				// do genetic stuff
 
-			
 
 				BodyDef bodyDef = new BodyDef();
 				bodyDef.type = BodyDef.BodyType.DynamicBody;
-				bodyDef.position.set(new Vector2((float) Math.random() * (Constants.SPAWN_RADIUS) + 1, (float) Math.random() * (Constants.SPAWN_RADIUS) + 1));
+				bodyDef.position.set(new Vector2((float) Math.random() * (Constants.SPAWN_RADIUS) + 1,
+						(float) Math.random() * (Constants.SPAWN_RADIUS) + 1));
 				CircleShape shape = new CircleShape();
 				shape.setRadius(0.2f);
 				Body botBody = world.createBody(bodyDef);
@@ -187,8 +242,6 @@ public class GameStage extends Stage implements ContactListener {
 
 		}
 	}
-	
-	
 
 	private void update(Body body) {
 
@@ -304,46 +357,40 @@ public class GameStage extends Stage implements ContactListener {
 					}
 
 				}
-				
-				
 
 			}
-			//System.out.println(runner.body.getFixtureList().first().getShape().getRadius() / 4.22);
-			for (int x = 0; x < bot.size; x++){
-				
-				if (bot.get(x).body.isActive()){
+			// System.out.println(runner.body.getFixtureList().first().getShape().getRadius()
+			// / 4.22);
+			for (int x = 0; x < bot.size; x++) {
+
+				if (bot.get(x).body.isActive()) {
 					BotUserData botData = bot.get(x).getUserData();
-				
-					
-					//double[] input = new double[5];
+
+					// double[] input = new double[5];
 					BasicMLData input = new BasicMLData(5);
-					
+
 					input.add(0, botData.getDistanceToNearestFood() / 45);
 					input.add(1, botData.getAngleToNearestFood() / (2 * MathUtils.PI));
-					input.add(2, botData.getDistanceToNearestPlayer() / 45); 
+					input.add(2, botData.getDistanceToNearestPlayer() / 45);
 					input.add(3, botData.getAngleToNearestPlayer() / (2 * MathUtils.PI));
 					input.add(4, botData.getSizeOfNearestPlayer() / 4.22);
-					
-					
-					//inputData.setData(input);
-					final MLData output = bot.get(x).network.compute(input);
-					
-					  if ( output.getData(0) > output.getData(1) && output.getData(0) > output.getData(2) ){
-					         bot.get(x).moveForward();
-					  }
-					      else if (  output.getData(1) > output.getData(0) && output.getData(1) > output.getData(2) ){
-					    	  bot.get(x).turnRight(); 
-					      }
-					    	  
-					      else if ( output.getData(2) > output.getData(0) && output.getData(2) > output.getData(1) ){
-					    	  bot.get(x).turnLeft();
-				}
-					
-				}
-				
-			}
 
-	
+					// inputData.setData(input);
+					final MLData output = bot.get(x).network.compute(input);
+
+					if (output.getData(0) > output.getData(1) && output.getData(0) > output.getData(2)) {
+						bot.get(x).moveForward();
+					} else if (output.getData(1) > output.getData(0) && output.getData(1) > output.getData(2)) {
+						bot.get(x).turnRight();
+					}
+
+					else if (output.getData(2) > output.getData(0) && output.getData(2) > output.getData(1)) {
+						bot.get(x).turnLeft();
+					}
+
+				}
+
+			}
 
 			// Input keys
 			if (leftKeyPressed) {
@@ -457,47 +504,57 @@ public class GameStage extends Stage implements ContactListener {
 
 		Body a = contact.getFixtureA().getBody();
 		Body b = contact.getFixtureB().getBody();
-
+		// Runner and food
 		if ((BodyUtils.bodyIsRunner(a) && BodyUtils.bodyIsFood(b))
 				|| (BodyUtils.bodyIsFood(a) && BodyUtils.bodyIsRunner(b))) {
 
 			if (BodyUtils.bodyIsFood(a) && !(deletedBodies.contains(a, true))) {
 
 				deletedBodies.add(a);
+
 			} else if (BodyUtils.bodyIsFood(b) && !(deletedBodies.contains(b, true))) {
+
 				deletedBodies.add(b);
 			}
 
 			runner.grow(0.02f);
 
 		}
+		// Bot and food
 		if ((BodyUtils.bodyIsBot(a) && BodyUtils.bodyIsFood(b))
 				|| (BodyUtils.bodyIsFood(a) && BodyUtils.bodyIsBot(b))) {
 
 			if (BodyUtils.bodyIsFood(a) && !(deletedBodies.contains(a, true))) {
 
-				deletedBodies.add(a);
 				bot.get(((BotUserData) (b.getUserData())).getID()).grow(0.02f);
+				deletedBodies.add(a);
 
 			} else if (BodyUtils.bodyIsFood(b) && !(deletedBodies.contains(b, true))) {
 
-				deletedBodies.add(b);
 				bot.get(((BotUserData) (a.getUserData())).getID()).grow(0.02f);
+				deletedBodies.add(b);
+
 			}
 
 		}
+		// Runner and bot
 
 		if ((BodyUtils.bodyIsRunner(a) && BodyUtils.bodyIsBot(b))
 				|| (BodyUtils.bodyIsBot(a) && BodyUtils.bodyIsRunner(b))) {
 
 			if (BodyUtils.bodyIsBot(a) && !(deletedBodies.contains(a, true))) {
 
-				if (((BotUserData) a.getUserData()).getRadius() < runner.getUserData().getRadius()) {
+				if (a.getFixtureList().first().getShape().getRadius() < runner.body.getFixtureList().first().getShape().getRadius()) {
+
+					geneRecord.add(bot.get(((BotUserData) (a.getUserData())).getID()).gene);
+					timeRecord.add(((BotUserData) (a.getUserData())).getSeconds());
+
 					deletedBodies.add(a);
 
 					runner.grow(0.02f);
 
-				} else if (((BotUserData) a.getUserData()).getRadius() > runner.getUserData().getRadius()) {
+				} else if (a.getFixtureList().first().getShape().getRadius() > runner.body.getFixtureList().first().getShape().getRadius()) {
+
 					deletedBodies.add(b);
 					runner.remove();
 					messageLabel.setText("You lost this round!");
@@ -507,11 +564,17 @@ public class GameStage extends Stage implements ContactListener {
 
 			} else if (BodyUtils.bodyIsBot(b) && !(deletedBodies.contains(b, true))) {
 
-				if (((BotUserData) b.getUserData()).getRadius() < runner.getUserData().getRadius()) {
+				if (b.getFixtureList().first().getShape().getRadius() < runner.body.getFixtureList().first().getShape().getRadius()) {
+
+					geneRecord.add(bot.get(((BotUserData) (b.getUserData())).getID()).gene);
+					timeRecord.add(((BotUserData) (b.getUserData())).getSeconds());
+
 					deletedBodies.add(b);
 
 					runner.grow(0.02f);
-				} else if (((BotUserData) b.getUserData()).getRadius() > runner.getUserData().getRadius()) {
+
+				} else if (b.getFixtureList().first().getShape().getRadius() > runner.body.getFixtureList().first().getShape().getRadius()) {
+
 					deletedBodies.add(a);
 					runner.remove();
 					messageLabel.setText("You lost this round!");
@@ -520,37 +583,38 @@ public class GameStage extends Stage implements ContactListener {
 			}
 
 		}
-
+		// Bot and bot
 		if ((BodyUtils.bodyIsBot(a) && BodyUtils.bodyIsBot(b)) || (BodyUtils.bodyIsBot(a) && BodyUtils.bodyIsBot(b))) {
 
-			if (BodyUtils.bodyIsBot(a) && !(deletedBodies.contains(a, true))) {
+			if (!(deletedBodies.contains(a, true)) && !(deletedBodies.contains(b, true))) {
 				// System.out.println(((BotUserData)
 				// (a.getUserData())).getID());
 
-				if (((BotUserData) a.getUserData()).getRadius() < ((BotUserData) b.getUserData()).getRadius()) {
-					deletedBodies.add(a);
-
-					bot.get(((BotUserData) b.getUserData()).getID()).grow(0.02f);
-
-				} else if (((BotUserData) a.getUserData()).getRadius() > ((BotUserData) b.getUserData()).getRadius()) {
-					deletedBodies.add(b);
-
-					bot.get(((BotUserData) a.getUserData()).getID()).grow(0.02f);
-				}
-
-			} else if (BodyUtils.bodyIsBot(b) && !(deletedBodies.contains(b, true))) {
-
-				if (((BotUserData) b.getUserData()).getRadius() < ((BotUserData) a.getUserData()).getRadius()) {
-					deletedBodies.add(b);
-
-					bot.get(((BotUserData) a.getUserData()).getID()).grow(0.02f);
-				} else if (((BotUserData) b.getUserData()).getRadius() > ((BotUserData) a.getUserData()).getRadius()) {
+				if (a.getFixtureList().first().getShape().getRadius() < b.getFixtureList().first().getShape().getRadius()) {
 
 					deletedBodies.add(a);
+					
+					geneRecord.add(bot.get(((BotUserData) (a.getUserData())).getID()).gene);
+					timeRecord.add(((BotUserData) (a.getUserData())).getSeconds());
 
 					bot.get(((BotUserData) b.getUserData()).getID()).grow(0.02f);
+					
+
+				} else if (a.getFixtureList().first().getShape().getRadius() > b.getFixtureList().first().getShape().getRadius()) {
+
+					deletedBodies.add(b);
+					
+					geneRecord.add(bot.get(((BotUserData) (b.getUserData())).getID()).gene);
+					timeRecord.add(((BotUserData) (b.getUserData())).getSeconds());
+
+					bot.get(((BotUserData) a.getUserData()).getID()).grow(0.02f);
+					
+					
+					
+					
 
 				}
+
 			}
 
 		}

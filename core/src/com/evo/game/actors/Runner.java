@@ -39,8 +39,10 @@ public class Runner extends GameActor{
 	 }
 	 
 	 public void grow(float r){
+		 
+		 getUserData().afterEat();
 		 Shape shape = body.getFixtureList().first().getShape();
 		 shape.setRadius(shape.getRadius() + 0.02f);
-		 getUserData().afterEat();
+	
 	 }
 }

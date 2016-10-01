@@ -9,8 +9,7 @@ import com.evo.game.box2d.FoodUserData;
 import com.evo.game.box2d.RunnerUserData;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.EdgeShape;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
+
 import com.badlogic.gdx.physics.box2d.World;
 
 public class WorldUtils {

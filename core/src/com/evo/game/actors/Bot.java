@@ -45,8 +45,10 @@ public class Bot extends GameActor{
 	 }
 	 
 	 public void grow(float r){
+		 
+		 getUserData().afterEat();
 		 Shape shape = body.getFixtureList().first().getShape();
 		 shape.setRadius(shape.getRadius() + r);
-		 getUserData().afterEat();
+		 
 	 }
 }
