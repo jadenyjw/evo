@@ -5,6 +5,9 @@ import com.evo.game.box2d.FoodUserData;
 
 import java.io.File;
 
+import org.encog.ml.data.MLData;
+import org.encog.ml.data.basic.BasicMLData;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.files.FileHandle;
@@ -37,6 +40,7 @@ import com.evo.game.utils.WorldUtils;
 import com.evo.genetics.Gene;
 import com.evo.networks.Network;
 import com.badlogic.gdx.math.Vector2;
+
 
 public class GameStage extends Stage implements ContactListener {
 
@@ -156,13 +160,16 @@ public class GameStage extends Stage implements ContactListener {
 					bot.get(x).gene.add((float) Math.random());
 
 				}
-				System.out.println(bot.get(x).gene);
-			}
+				
+				bot.get(x).network.setWeights(bot.get(x).gene);
+				System.out.println(bot.get(x).network.dumpWeights());
+				
+			    }
 
 			else {
 				// do genetic stuff
 
-				// System.out.println(bot);
+			
 
 				BodyDef bodyDef = new BodyDef();
 				bodyDef.type = BodyDef.BodyType.DynamicBody;
@@ -174,15 +181,14 @@ public class GameStage extends Stage implements ContactListener {
 				botBody.resetMassData();
 				botBody.setUserData(new BotUserData());
 				bot.get(x).body = botBody;
-				System.out.println(bot.get(x).gene);
-				System.out.println(bot.size);
-				System.out.println(bot.get(x).gene.size);
 				bot.get(x).network.setWeights(bot.get(x).gene);
 
 			}
 
 		}
 	}
+	
+	
 
 	private void update(Body body) {
 
@@ -298,13 +304,45 @@ public class GameStage extends Stage implements ContactListener {
 					}
 
 				}
+				
+				
 
 			}
+			
+			for (int x = 0; x < bot.size; x++){
+				
+				if (bot.get(x).body.isActive()){
+					BotUserData botData = bot.get(x).getUserData();
+				
+					
+					//double[] input = new double[5];
+					BasicMLData input = new BasicMLData(5);
+					
+					input.add(0, botData.getDistanceToNearestFood());
+					input.add(1, botData.getAngleToNearestFood());
+					input.add(2, botData.getDistanceToNearestPlayer()); 
+					input.add(3, botData.getAngleToNearestPlayer());
+					input.add(4, botData.getSizeOfNearestPlayer());
+					
+					//inputData.setData(input);
+					final MLData output = bot.get(x).network.compute(input);
+					
+					  if ( output.getData(0) > output.getData(1) && output.getData(0) > output.getData(2) ){
+					         bot.get(x).moveForward();
+					  }
+					      else if (  output.getData(1) > output.getData(0) && output.getData(1) > output.getData(2) ){
+					    	  bot.get(x).turnRight(); 
+					      }
+					    	  
+					      else if ( output.getData(2) > output.getData(0) && output.getData(2) > output.getData(1) ){
+					    	  bot.get(x).turnLeft();
+				}
+					
+				}
+				
+			}
 
-			// System.out.println(((BotUserData)
-			// bot.get(1).getUserData()).getDistanceToNearestPlayer());
-			// System.out.println(((BotUserData)
-			// bot.get(1).getUserData()).getAngleToNearestPlayer());
+	
 
 			// Input keys
 			if (leftKeyPressed) {

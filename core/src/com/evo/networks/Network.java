@@ -1,53 +1,72 @@
 package com.evo.networks;
 
+import org.encog.engine.network.activation.ActivationSigmoid;
+import org.encog.ml.data.MLData;
+import org.encog.neural.networks.BasicNetwork;
+import org.encog.neural.networks.layers.BasicLayer;
+
 import com.badlogic.gdx.utils.Array;
-import com.evo.networks.MathUtils;
-public class Network extends Array<Array<Float>> {
-	
-	private Array<Array<Float>> weights = new Array<Array<Float>>();
+
+public class Network extends BasicNetwork {
+
+	BasicNetwork network = new BasicNetwork();
 
 	public Network() {
-	  
-	}
-	
-	public void setWeights(Array<Float> gene){
-		System.out.println(gene.size);
-		Array<Float> tempArray = new Array<Float>();
-		for (int x = 0; x < 25; x++){
-			
-			tempArray.add(gene.get(x));
-	
-		}
-		weights.add(tempArray);
-		tempArray.clear();
-		
-		for (int x = 25; x < 50; x++){
-			tempArray.add(gene.get(x));
-		}
-		weights.add(tempArray);
-		tempArray.clear();
-		
-		for (int x = 50; x < 64; x++){
-			tempArray.add(gene.get(x));
-		}
-		weights.add(tempArray);
-		tempArray.clear();
-	
-	}
-	
-	
-	
-	public Array<Float> compute(Array<Float> inputs){
-		
-	
-	
-		
-		
-		
-		
-		
-		return new Array<Float>(); //temp
+
+		this.addLayer(new BasicLayer(new ActivationSigmoid(), false, 5));
+		this.addLayer(new BasicLayer(new ActivationSigmoid(), false, 5));
+		this.addLayer(new BasicLayer(new ActivationSigmoid(), false, 5));
+		this.addLayer(new BasicLayer(new ActivationSigmoid(), false, 3));
+		this.getStructure().finalizeStructure();
+
 	}
 
+	public void setWeights(Array<Float> gene) {
+    //System.out.println(gene.size);
+		//System.out.println(gene);
+		int count = 0;
+		
+		  for (int a = 0; a < 5; a++) {
+			for (int b = 0; b < 5; b++) {
+				
+					this.setWeight(0, a, b, gene.get(count));
+					count++;
+					
+				}
+			}
+		
+		
+		for (int a = 0; a < 5; a++) {
+			
+			  for (int b = 0; b < 5; b++) {
+				
+					this.setWeight(1, a, b, gene.get(count));
+					count++;
+					
+				}
+			}
+
+		
+		
+		for (int a = 0; a < 5; a++) {
+			
+			  for (int b = 0; b < 3; b++) {
+				
+					this.setWeight(2, a, b, gene.get(count));
+					count++;
+				
+				}
+			}
+
+		
+
+	}
+
+	public int getAnswer(Array<Float> inputs) {
+		
+        this.compute((MLData) inputs);
+		
+		return 1; // temp
+	}
 
 }
