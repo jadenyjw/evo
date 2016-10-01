@@ -212,7 +212,7 @@ public class GameStage extends Stage implements ContactListener {
 				// Generate a random gene
 
 				bot.get(x).gene = new Gene();
-				for (int y = 0; y < 65; y++) {
+				for (int y = 0; y < 90; y++) {
 					bot.get(x).gene.add((float) Math.random());
 
 				}
@@ -367,13 +367,14 @@ public class GameStage extends Stage implements ContactListener {
 					BotUserData botData = bot.get(x).getUserData();
 
 					// double[] input = new double[5];
-					BasicMLData input = new BasicMLData(5);
+					BasicMLData input = new BasicMLData(6);
 
 					input.add(0, botData.getDistanceToNearestFood() / 45);
 					input.add(1, botData.getAngleToNearestFood() / (2 * MathUtils.PI));
 					input.add(2, botData.getDistanceToNearestPlayer() / 45);
 					input.add(3, botData.getAngleToNearestPlayer() / (2 * MathUtils.PI));
 					input.add(4, botData.getSizeOfNearestPlayer() / 4.22);
+					input.add(5, bot.get(x).body.getFixtureList().first().getShape().getRadius() / 4.22);
 
 					// inputData.setData(input);
 					final MLData output = bot.get(x).network.compute(input);

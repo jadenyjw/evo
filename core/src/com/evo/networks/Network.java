@@ -13,9 +13,9 @@ public class Network extends BasicNetwork {
 
 	public Network() {
 
-		this.addLayer(new BasicLayer(new ActivationSigmoid(), false, 5));
-		this.addLayer(new BasicLayer(new ActivationSigmoid(), false, 5));
-		this.addLayer(new BasicLayer(new ActivationSigmoid(), false, 5));
+		this.addLayer(new BasicLayer(new ActivationSigmoid(), false, 6));
+		this.addLayer(new BasicLayer(new ActivationSigmoid(), false, 6));
+		this.addLayer(new BasicLayer(new ActivationSigmoid(), false, 6));
 		this.addLayer(new BasicLayer(new ActivationSigmoid(), false, 3));
 		this.getStructure().finalizeStructure();
 
@@ -24,8 +24,8 @@ public class Network extends BasicNetwork {
 	public void setWeights(Array<Float> gene) {
 		int count = 0;
 		
-		  for (int a = 0; a < 5; a++) {
-			for (int b = 0; b < 5; b++) {
+		  for (int a = 0; a < 6; a++) {
+			for (int b = 0; b < 6; b++) {
 				
 					this.setWeight(0, a, b, gene.get(count));
 					count++;
@@ -34,9 +34,9 @@ public class Network extends BasicNetwork {
 			}
 		
 		
-		for (int a = 0; a < 5; a++) {
+		for (int a = 0; a < 6; a++) {
 			
-			  for (int b = 0; b < 5; b++) {
+			  for (int b = 0; b < 6; b++) {
 				
 					this.setWeight(1, a, b, gene.get(count));
 					count++;
@@ -46,7 +46,7 @@ public class Network extends BasicNetwork {
 
 		
 		
-		for (int a = 0; a < 5; a++) {
+		for (int a = 0; a < 6; a++) {
 			
 			  for (int b = 0; b < 3; b++) {
 				
