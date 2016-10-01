@@ -145,9 +145,7 @@ public class GameStage extends Stage implements ContactListener {
             
 			Random randomno = new Random();
 			
-			for (int x = 0; x < geneRecord.size - 1; x++){
-				
-				geneRecord.set(x, geneRecord.get(geneRecord.size - 1));
+			for (int x = 0; x < geneRecord.size - 5; x++){
 				
 				for (int y = 0; y < geneRecord.get(x).size; y++){
 				float uniform = (float) randomno.nextFloat();

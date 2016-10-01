@@ -9,9 +9,7 @@ gwt {
     src = files(file("src/")) // Needs to be in front of "modules" below.
 	
     modules 'com.evo.game.GdxDefinition'
-	modules 'com.evo.genetics.GdxDefinition'
-	modules 'com.evo.networks.GdxDefinition'
-	
+
     devModules 'com.evo.game.GdxDefinitionSuperdev'
     project.webAppDirName = 'webapp'
 
