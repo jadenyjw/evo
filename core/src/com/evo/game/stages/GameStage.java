@@ -308,7 +308,7 @@ public class GameStage extends Stage implements ContactListener {
 				
 
 			}
-			
+			//System.out.println(runner.body.getFixtureList().first().getShape().getRadius() / 4.22);
 			for (int x = 0; x < bot.size; x++){
 				
 				if (bot.get(x).body.isActive()){
@@ -318,11 +318,12 @@ public class GameStage extends Stage implements ContactListener {
 					//double[] input = new double[5];
 					BasicMLData input = new BasicMLData(5);
 					
-					input.add(0, botData.getDistanceToNearestFood());
-					input.add(1, botData.getAngleToNearestFood());
-					input.add(2, botData.getDistanceToNearestPlayer()); 
-					input.add(3, botData.getAngleToNearestPlayer());
-					input.add(4, botData.getSizeOfNearestPlayer());
+					input.add(0, botData.getDistanceToNearestFood() / 45);
+					input.add(1, botData.getAngleToNearestFood() / (2 * MathUtils.PI));
+					input.add(2, botData.getDistanceToNearestPlayer() / 45); 
+					input.add(3, botData.getAngleToNearestPlayer() / (2 * MathUtils.PI));
+					input.add(4, botData.getSizeOfNearestPlayer() / 4.22);
+					
 					
 					//inputData.setData(input);
 					final MLData output = bot.get(x).network.compute(input);
