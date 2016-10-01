@@ -67,6 +67,9 @@ public class GameStage extends Stage implements ContactListener {
 	private Label botsLabel = new Label("Bots Left", skin);
 	private Label messageLabel = new Label("",skin);
 	
+	private float playTime = 0;
+	private float playTimeRounded;
+	
     
 	public GameStage() {
 		
@@ -144,10 +147,10 @@ public class GameStage extends Stage implements ContactListener {
 	private void update(Body body) {
 		
 		if (BodyUtils.bodyIsBot(body)){
-		  bot.get(((BotUserData) body.getUserData()).getID()).addAction(Actions.removeActor());
+		  //bot.get(((BotUserData) body.getUserData()).getID()).addAction(Actions.removeActor());
 		}
 		if(BodyUtils.bodyIsFood(body)){
-		  food.get(((FoodUserData) body.getUserData()).getID()).addAction(Actions.removeActor());
+		  //food.get(((FoodUserData) body.getUserData()).getID()).addAction(Actions.removeActor());
 		}
 		
 		deletedBodies.removeValue(body, true);
@@ -155,12 +158,24 @@ public class GameStage extends Stage implements ContactListener {
 		world.destroyBody(body);
 
 	}
-
+	
+	
 	@Override
 	public void act(float delta) {
 
 		super.act(delta);
 		
+		playTime += Gdx.graphics.getDeltaTime();
+	    playTimeRounded = Math.round(playTime * 100) / 100.0f;
+	    //Gdx.app.log("playTimeRounded", playTimeRounded + "");
+	    
+	    for (int x = 0; x < bot.size; x++){
+	    	if (bot.get(x).body.isActive()){
+	    		((BotUserData) bot.get(x).getUserData()).setSeconds(playTimeRounded);
+	    		System.out.println(((BotUserData) bot.get(x).getUserData()).getSeconds() + " " + x);
+	    	}
+	    }
+	    
 		for (Body body : deletedBodies) {
 			update(body);
 		}
@@ -177,6 +192,7 @@ public class GameStage extends Stage implements ContactListener {
 				messageLabel.setText("You won this round!");
 			}
 			generation++;
+			playTime = 0f;
 			setUpWorld();
 			setupCamera();
 			allDead = false;

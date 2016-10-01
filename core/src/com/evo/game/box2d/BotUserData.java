@@ -15,12 +15,16 @@ public class BotUserData extends UserData {
 
 	private float distanceToNearestFood;
 	private float angleToNearestFood;
+	
+	private float secondsSurvived; //Fitness function
 
 	public BotUserData() {
+		
 		super();
 		velocity = 5f;
 		radius = 0.2f;
 		userDataType = UserDataType.BOT;
+		
 	}
 
 	public float getRadius() {
@@ -42,6 +46,13 @@ public class BotUserData extends UserData {
 
 	public int getID() {
 		return id;
+	}
+	
+	public void setSeconds(float x){
+		secondsSurvived = x;
+	}
+	public float getSeconds(){
+		return secondsSurvived;
 	}
 
 	// Neural Network Inputs
