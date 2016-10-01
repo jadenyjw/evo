@@ -16,6 +16,7 @@ public class Constants {
 
     public static final float GROUND_HEIGHT = 2f;
 
+    public static final float SPAWN_RADIUS = 10f;
     
     public static final float RUNNER_X = 2;
     public static final float RUNNER_Y = GROUND_Y + GROUND_HEIGHT;

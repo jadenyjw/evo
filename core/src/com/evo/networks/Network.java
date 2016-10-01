@@ -8,6 +8,9 @@ public class Network extends Array<Array<Float>> {
 	  
 	}
 	
+	public void setWeights(Array<Float> gene){
+		
+	}
 
 
 }

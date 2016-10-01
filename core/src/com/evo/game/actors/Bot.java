@@ -10,8 +10,8 @@ import com.evo.networks.Network;
 
 public class Bot extends GameActor{
 
-	float velX; 
-	float velY;
+	private float velX; 
+	private float velY;
 	public Gene gene;
 	public Network network;
 	
