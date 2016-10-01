@@ -22,8 +22,6 @@ public class Network extends BasicNetwork {
 	}
 
 	public void setWeights(Array<Float> gene) {
-    //System.out.println(gene.size);
-		//System.out.println(gene);
 		int count = 0;
 		
 		  for (int a = 0; a < 5; a++) {
