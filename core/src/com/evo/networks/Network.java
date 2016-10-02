@@ -1,7 +1,7 @@
 package com.evo.networks;
 
 import org.encog.engine.network.activation.ActivationSigmoid;
-import org.encog.ml.data.MLData;
+
 import org.encog.neural.networks.BasicNetwork;
 import org.encog.neural.networks.layers.BasicLayer;
 
@@ -13,9 +13,9 @@ public class Network extends BasicNetwork {
 
 	public Network() {
 
-		this.addLayer(new BasicLayer(new ActivationSigmoid(), false, 6));
-		this.addLayer(new BasicLayer(new ActivationSigmoid(), false, 6));
-		this.addLayer(new BasicLayer(new ActivationSigmoid(), false, 6));
+		this.addLayer(new BasicLayer(new ActivationSigmoid(), false, 7));
+		this.addLayer(new BasicLayer(new ActivationSigmoid(), false, 3));
+		this.addLayer(new BasicLayer(new ActivationSigmoid(), false, 3));
 		this.addLayer(new BasicLayer(new ActivationSigmoid(), false, 3));
 		this.getStructure().finalizeStructure();
 
@@ -24,47 +24,18 @@ public class Network extends BasicNetwork {
 	public void setWeights(Array<Float> gene) {
 		int count = 0;
 		
-		  for (int a = 0; a < 6; a++) {
-			for (int b = 0; b < 6; b++) {
-				
-					this.setWeight(0, a, b, gene.get(count));
+		for (int x = 0; x < this.getLayerCount() - 1; x ++){
+			for (int a = 0; a < this.getLayerNeuronCount(x); a++){
+				for (int b = 0; b < this.getLayerNeuronCount(x + 1); b++){
+					this.setWeight(x, a, b, gene.get(count));
 					count++;
-					
+					System.out.println(this.getWeight(x, a, b));
 				}
 			}
+		}
 		
-		
-		for (int a = 0; a < 6; a++) {
-			
-			  for (int b = 0; b < 6; b++) {
-				
-					this.setWeight(1, a, b, gene.get(count));
-					count++;
-					
-				}
-			}
-
-		
-		
-		for (int a = 0; a < 6; a++) {
-			
-			  for (int b = 0; b < 3; b++) {
-				
-					this.setWeight(2, a, b, gene.get(count));
-					count++;
-				
-				}
-			}
-
 		
 
-	}
-
-	public int getAnswer(Array<Float> inputs) {
-		
-        this.compute((MLData) inputs);
-		
-		return 1; // temp
 	}
 
 }

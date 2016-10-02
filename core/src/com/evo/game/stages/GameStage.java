@@ -98,9 +98,11 @@ public class GameStage extends Stage implements ContactListener {
 		}
 		food = new Array<Food>();
 		setUpBorder();
-		setUpFood();
-		setUpRunner();
 		setUpBots();
+		setUpRunner();
+		setUpFood();
+		
+		
 		setUpText();
 	}
 
@@ -148,8 +150,8 @@ public class GameStage extends Stage implements ContactListener {
 			for (int x = 0; x < geneRecord.size - 5; x++){
 				
 				for (int y = 0; y < geneRecord.get(x).size; y++){
-				float uniform = (float) randomno.nextFloat();
-				System.out.println(uniform);
+				float uniform = (float) (randomno.nextFloat());
+				//System.out.println(uniform);
 				  if (geneRecord.get(x).get(y) + uniform > 1){
 					geneRecord.get(x).set(y, geneRecord.get(x).get(y) - uniform);
 				  }
@@ -179,8 +181,12 @@ public class GameStage extends Stage implements ContactListener {
 				// Generate a random gene
 
 				bot.get(x).gene = new Gene();
-				for (int y = 0; y < 90; y++) {
-					bot.get(x).gene.add((float) Math.random());
+				Random rand = new Random();
+
+				
+				for (int y = 0; y < 39; y++) {
+					
+					bot.get(x).gene.add(rand.nextFloat() * (1 - (-1)) + -1);
 
 				}
 
@@ -231,7 +237,7 @@ public class GameStage extends Stage implements ContactListener {
 	public void act(float delta) {
 
 		super.act(delta);
-
+		
 		playTime += Gdx.graphics.getDeltaTime();
 		playTimeRounded = Math.round(playTime * 100) / 100.0f;
 		// Gdx.app.log("playTimeRounded", playTimeRounded + "");
@@ -334,7 +340,7 @@ public class GameStage extends Stage implements ContactListener {
 					BotUserData botData = bot.get(x).getUserData();
 
 					// double[] input = new double[5];
-					BasicMLData input = new BasicMLData(6);
+					BasicMLData input = new BasicMLData(7);
 
 					input.add(0, botData.getDistanceToNearestFood() / 45);
 					input.add(1, botData.getAngleToNearestFood() / (2 * MathUtils.PI));
@@ -342,9 +348,16 @@ public class GameStage extends Stage implements ContactListener {
 					input.add(3, botData.getAngleToNearestPlayer() / (2 * MathUtils.PI));
 					input.add(4, botData.getSizeOfNearestPlayer() / 4.22);
 					input.add(5, bot.get(x).body.getFixtureList().first().getShape().getRadius() / 4.22);
-
+					if (bot.get(x).body.getLinearVelocity().len() > 0){
+						input.add(6, 1);
+					}
+					else{
+						input.add(6, 0);
+					}
+					
 					// inputData.setData(input);
 					final MLData output = bot.get(x).network.compute(input);
+					//System.out.println(output);
 
 					if (output.getData(0) > output.getData(1) && output.getData(0) > output.getData(2)) {
 						bot.get(x).moveForward();

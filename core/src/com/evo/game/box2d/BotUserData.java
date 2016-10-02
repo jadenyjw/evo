@@ -21,7 +21,7 @@ public class BotUserData extends UserData {
 	public BotUserData() {
 		
 		super();
-		velocity = 5f;
+		velocity = 10f;
 		//radius = 0.2f;
 		userDataType = UserDataType.BOT;
 		
@@ -38,7 +38,7 @@ public class BotUserData extends UserData {
 
 	public void afterEat() {
 		//radius += 0.02f;
-		velocity = velocity * 0.98f;
+		velocity = velocity * 0.99f;
 	}
 
 	public void setID(int i) {
