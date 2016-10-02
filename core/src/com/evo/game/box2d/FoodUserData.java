@@ -4,6 +4,7 @@ import com.evo.game.enums.UserDataType;
 
 public class FoodUserData extends UserData{
 	private int id;
+	
 	public FoodUserData() {
         super();
         userDataType = UserDataType.FOOD;

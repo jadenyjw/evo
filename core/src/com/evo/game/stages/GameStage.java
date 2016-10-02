@@ -55,7 +55,7 @@ public class GameStage extends Stage implements ContactListener {
 
 	private OrthographicCamera camera;
 	private Box2DDebugRenderer renderer;
-	
+
 	private Array<Body> deletedBodies;
 	private Array<Body> bodies;
 	private Array<Body> growBodies;
@@ -96,6 +96,7 @@ public class GameStage extends Stage implements ContactListener {
 		bodies = new Array<Body>();
 		deletedBodies = new Array<Body>();
 		growBodies = new Array<Body>();
+
 		if (generation == 1) {
 			bot = new Array<Bot>();
 		}
@@ -104,8 +105,7 @@ public class GameStage extends Stage implements ContactListener {
 		setUpBots();
 		setUpRunner();
 		setUpFood();
-		
-		
+
 		setUpText();
 	}
 
@@ -119,7 +119,7 @@ public class GameStage extends Stage implements ContactListener {
 	}
 
 	private void setUpFood() {
-		for (int x = 0; x < 80; x++) {
+		for (int x = 0; x < 64; x++) {
 			food.add(new Food(
 					WorldUtils.createFood(world, (float) Math.random() * (28) + 1, (float) Math.random() * (28) + 1)));
 			food.get(x).getUserData().setID(x);
@@ -147,20 +147,20 @@ public class GameStage extends Stage implements ContactListener {
 	private void setUpBots() {
 
 		if (generation != 1) {
-            
+
 			Random randomno = new Random();
-			
-			for (int x = 0; x < geneRecord.size - 5; x++){
-				
-				for (int y = 0; y < geneRecord.get(x).size; y++){
-				float uniform = (float) (randomno.nextFloat());
-				//System.out.println(uniform);
-				  if (geneRecord.get(x).get(y) + uniform > 1){
-					geneRecord.get(x).set(y, geneRecord.get(x).get(y) - uniform);
-				  }
-				  else{
-					geneRecord.get(x).set(y, geneRecord.get(x).get(y) + uniform);  
-				  }
+
+			for (int x = 0; x < geneRecord.size - 5; x++) {
+
+				for (int y = 0; y < geneRecord.get(x).size; y++) {
+					float uniform = (float) (randomno.nextGaussian() * Math.pow(10, -x));
+					System.out.println(uniform);
+					// System.out.println(uniform);
+					if (geneRecord.get(x).get(y) + uniform > 1) {
+						geneRecord.get(x).set(y, geneRecord.get(x).get(y) - uniform);
+					} else {
+						geneRecord.get(x).set(y, geneRecord.get(x).get(y) + uniform);
+					}
 				}
 			}
 		}
@@ -180,9 +180,8 @@ public class GameStage extends Stage implements ContactListener {
 				bot.get(x).gene = new Gene();
 				Random rand = new Random();
 
-				
-				for (int y = 0; y < 60; y++) {
-					
+				for (int y = 0; y < 64; y++) {
+
 					bot.get(x).gene.add(rand.nextFloat() * (1 - (-1)) + -1);
 
 				}
@@ -193,7 +192,6 @@ public class GameStage extends Stage implements ContactListener {
 			}
 
 			else {
-
 
 				BodyDef bodyDef = new BodyDef();
 				bodyDef.type = BodyDef.BodyType.DynamicBody;
@@ -229,26 +227,22 @@ public class GameStage extends Stage implements ContactListener {
 		world.destroyBody(body);
 
 	}
-	
+
 	private void updateGrow(Body body) {
-		
+
 		growBodies.removeValue(body, true);
-		
+
 		if (BodyUtils.bodyIsBot(body) && bot.size > 0) {
 			try {
 				bot.get(((BotUserData) (body.getUserData())).getID()).grow(0.02f);
 			} catch (IllegalStateException name) {
 
 			}
-			
+
 		}
 		if (BodyUtils.bodyIsRunner(body)) {
 			runner.grow(0.02f);
 		}
-
-		
-
-		
 
 	}
 
@@ -256,7 +250,7 @@ public class GameStage extends Stage implements ContactListener {
 	public void act(float delta) {
 
 		super.act(delta);
-		
+
 		playTime += Gdx.graphics.getDeltaTime();
 		playTimeRounded = Math.round(playTime * 100) / 100.0f;
 		// Gdx.app.log("playTimeRounded", playTimeRounded + "");
@@ -308,48 +302,48 @@ public class GameStage extends Stage implements ContactListener {
 
 					float lowestDistanceToFood = Float.POSITIVE_INFINITY;
 					float angleToFood;
-					if (bodies.size > 0){
-					for (int y = 0; y < bodies.size; y++) {
+					if (bodies.size > 0) {
+						for (int y = 0; y < bodies.size; y++) {
 
-						Body targetBody = bodies.get(y);
-						if (bodies.get(y).isActive()) {
+							Body targetBody = bodies.get(y);
+							if (bodies.get(y).isActive()) {
 
-							// If body is food
-							if (BodyUtils.bodyIsFood(targetBody)) {
-								if (calculateDistance(currentBot.body, targetBody) < lowestDistanceToFood) {
+								// If body is food
+								if (BodyUtils.bodyIsFood(targetBody)) {
+									if (calculateDistance(currentBot.body, targetBody) < lowestDistanceToFood) {
 
-									lowestDistanceToFood = calculateDistance(currentBot.body, targetBody);
-									angleToFood = calculateAngle(currentBot.body, targetBody);
+										lowestDistanceToFood = calculateDistance(currentBot.body, targetBody);
+										angleToFood = calculateAngle(currentBot.body, targetBody);
 
-									((BotUserData) (currentBot.getUserData()))
-											.setDistanceToNearestPlayer(lowestDistanceToFood);
-									((BotUserData) (currentBot.getUserData())).setAngleToNearestPlayer(angleToFood);
+										((BotUserData) (currentBot.getUserData()))
+												.setDistanceToNearestPlayer(lowestDistanceToFood);
+										((BotUserData) (currentBot.getUserData())).setAngleToNearestPlayer(angleToFood);
+
+									}
 
 								}
 
-							}
+								// If body is a runner and is not himself
 
-							// If body is a runner and is not himself
+								if ((BodyUtils.bodyIsRunner(targetBody) || BodyUtils.bodyIsBot(targetBody))
+										&& targetBody != currentBot.body) {
 
-							if ((BodyUtils.bodyIsRunner(targetBody) || BodyUtils.bodyIsBot(targetBody))
-									&& targetBody != currentBot.body) {
+									if (calculateDistance(currentBot.body, targetBody) < lowestDistanceToBot) {
+										lowestDistanceToBot = calculateDistance(currentBot.body, targetBody);
+										angleToBot = calculateAngle(currentBot.body, targetBody);
+										sizeOfBot = calculateSize(targetBody);
 
-								if (calculateDistance(currentBot.body, targetBody) < lowestDistanceToBot) {
-									lowestDistanceToBot = calculateDistance(currentBot.body, targetBody);
-									angleToBot = calculateAngle(currentBot.body, targetBody);
-									sizeOfBot = calculateSize(targetBody);
+										((BotUserData) (currentBot.getUserData()))
+												.setDistanceToNearestPlayer(lowestDistanceToBot);
+										((BotUserData) (currentBot.getUserData())).setAngleToNearestPlayer(angleToBot);
+										((BotUserData) (currentBot.getUserData())).setSizeOfNearestPlayer(sizeOfBot);
+									}
 
-									((BotUserData) (currentBot.getUserData()))
-											.setDistanceToNearestPlayer(lowestDistanceToBot);
-									((BotUserData) (currentBot.getUserData())).setAngleToNearestPlayer(angleToBot);
-									((BotUserData) (currentBot.getUserData())).setSizeOfNearestPlayer(sizeOfBot);
 								}
 
 							}
 
 						}
-
-					}
 					}
 				}
 
@@ -362,7 +356,7 @@ public class GameStage extends Stage implements ContactListener {
 					BotUserData botData = bot.get(x).getUserData();
 
 					// double[] input = new double[5];
-					BasicMLData input = new BasicMLData(7);
+					BasicMLData input = new BasicMLData(8);
 
 					input.add(0, botData.getDistanceToNearestFood() / 45);
 					input.add(1, botData.getAngleToNearestFood() / (2 * MathUtils.PI));
@@ -370,41 +364,47 @@ public class GameStage extends Stage implements ContactListener {
 					input.add(3, botData.getAngleToNearestPlayer() / (2 * MathUtils.PI));
 					input.add(4, botData.getSizeOfNearestPlayer() / 4);
 					input.add(5, bot.get(x).body.getFixtureList().first().getShape().getRadius() / 4.22);
-					if (bot.get(x).body.getLinearVelocity().len() > 0){
+					if (bot.get(x).body.getLinearVelocity().len() > 0) {
 						input.add(6, 1);
-					}
-					else{
+					} else {
 						input.add(6, 0);
+					}
+					if (botData.getWallTouch() == true) {
+						input.add(7, 1);
+					} else {
+						input.add(7, 0);
 					}
 					
 					// inputData.setData(input);
 					final MLData output = bot.get(x).network.compute(input);
-					//System.out.println(output);
+					// System.out.println(output);
 					float highest = -1;
 					int highestID = 0;
-					for (int y = 0; y < output.size(); y++){
-						if(output.getData(y) > highest){
+					for (int y = 0; y < output.size(); y++) {
+						if (output.getData(y) > highest) {
 							highestID = y;
 							highest = (float) output.getData(y);
 						}
 					}
-					
-					
-					switch (highestID){
-					
-					case 0: bot.get(x).moveForward();
-					break;
-					
-					case 1: bot.get(x).turnRight();
-					break;
-					
-					case 2: bot.get(x).turnLeft();
-					break;
-					
-					case 3: bot.get(x).stop();
-					break;
-					
-						
+
+					switch (highestID) {
+
+					case 0:
+						bot.get(x).moveForward();
+						break;
+
+					case 1:
+						bot.get(x).turnRight();
+						break;
+
+					case 2:
+						bot.get(x).turnLeft();
+						break;
+
+					case 3:
+						bot.get(x).stop();
+						break;
+
 					}
 
 				}
@@ -563,7 +563,8 @@ public class GameStage extends Stage implements ContactListener {
 
 			if (BodyUtils.bodyIsBot(a) && !(deletedBodies.contains(a, true))) {
 
-				if (a.getFixtureList().first().getShape().getRadius() < runner.body.getFixtureList().first().getShape().getRadius()) {
+				if (a.getFixtureList().first().getShape().getRadius() < runner.body.getFixtureList().first().getShape()
+						.getRadius()) {
 
 					geneRecord.add(bot.get(((BotUserData) (a.getUserData())).getID()).gene);
 					timeRecord.add(((BotUserData) (a.getUserData())).getSeconds());
@@ -572,7 +573,8 @@ public class GameStage extends Stage implements ContactListener {
 
 					growBodies.add(b);
 
-				} else if (a.getFixtureList().first().getShape().getRadius() > runner.body.getFixtureList().first().getShape().getRadius()) {
+				} else if (a.getFixtureList().first().getShape().getRadius() > runner.body.getFixtureList().first()
+						.getShape().getRadius()) {
 
 					deletedBodies.add(b);
 					runner.remove();
@@ -583,7 +585,8 @@ public class GameStage extends Stage implements ContactListener {
 
 			} else if (BodyUtils.bodyIsBot(b) && !(deletedBodies.contains(b, true))) {
 
-				if (b.getFixtureList().first().getShape().getRadius() < runner.body.getFixtureList().first().getShape().getRadius()) {
+				if (b.getFixtureList().first().getShape().getRadius() < runner.body.getFixtureList().first().getShape()
+						.getRadius()) {
 
 					geneRecord.add(bot.get(((BotUserData) (b.getUserData())).getID()).gene);
 					timeRecord.add(((BotUserData) (b.getUserData())).getSeconds());
@@ -592,7 +595,8 @@ public class GameStage extends Stage implements ContactListener {
 
 					growBodies.add(a);
 
-				} else if (b.getFixtureList().first().getShape().getRadius() > runner.body.getFixtureList().first().getShape().getRadius()) {
+				} else if (b.getFixtureList().first().getShape().getRadius() > runner.body.getFixtureList().first()
+						.getShape().getRadius()) {
 
 					deletedBodies.add(a);
 					runner.remove();
@@ -609,40 +613,68 @@ public class GameStage extends Stage implements ContactListener {
 				// System.out.println(((BotUserData)
 				// (a.getUserData())).getID());
 
-				if (a.getFixtureList().first().getShape().getRadius() < b.getFixtureList().first().getShape().getRadius()) {
+				if (a.getFixtureList().first().getShape().getRadius() < b.getFixtureList().first().getShape()
+						.getRadius()) {
 
 					deletedBodies.add(a);
-					
+
 					geneRecord.add(bot.get(((BotUserData) (a.getUserData())).getID()).gene);
 					timeRecord.add(((BotUserData) (a.getUserData())).getSeconds());
 
 					growBodies.add(b);
-					
 
-				} else if (a.getFixtureList().first().getShape().getRadius() > b.getFixtureList().first().getShape().getRadius()) {
+				} else if (a.getFixtureList().first().getShape().getRadius() > b.getFixtureList().first().getShape()
+						.getRadius()) {
 
 					deletedBodies.add(b);
-					
+
 					geneRecord.add(bot.get(((BotUserData) (b.getUserData())).getID()).gene);
 					timeRecord.add(((BotUserData) (b.getUserData())).getSeconds());
 
 					growBodies.add(a);
-					
-					
-					
-					
 
 				}
 
 			}
-
 		}
 
+		if ((BodyUtils.bodyIsBot(a) && BodyUtils.bodyIsWall(b))
+				|| (BodyUtils.bodyIsWall(a) && BodyUtils.bodyIsBot(b))) {
+
+			if (BodyUtils.bodyIsBot(a) && BodyUtils.bodyIsWall(b)) {
+
+				((BotUserData) (a.getUserData())).setWallTouch(true);
+
+			} else if (BodyUtils.bodyIsBot(b) && BodyUtils.bodyIsWall(a)) {
+
+				((BotUserData) (b.getUserData())).setWallTouch(true);
+
+			}
+
+		}
 	}
 
 	@Override
 	public void endContact(Contact contact) {
-		// TODO Auto-generated method stub
+		
+		Body a = contact.getFixtureA().getBody();
+		Body b = contact.getFixtureB().getBody();
+		
+		if ((BodyUtils.bodyIsBot(a) && BodyUtils.bodyIsWall(b))
+				|| (BodyUtils.bodyIsWall(a) && BodyUtils.bodyIsBot(b))) {
+			System.out.println("yay");
+			if (BodyUtils.bodyIsBot(a) && BodyUtils.bodyIsWall(b)) {
+
+				((BotUserData) (a.getUserData())).setWallTouch(false);
+				
+
+			} else if (BodyUtils.bodyIsBot(b) && BodyUtils.bodyIsWall(a)) {
+
+				((BotUserData) (b.getUserData())).setWallTouch(false);
+
+			}
+
+		}
 
 	}
 

@@ -20,5 +20,10 @@ public class BodyUtils {
         return userData != null && userData.getUserDataType() == UserDataType.BOT;
     }
     
+    public static boolean bodyIsWall(Body body) {
+        UserData userData = (UserData) body.getUserData();
+        return userData != null && userData.getUserDataType() == UserDataType.WALL;
+    }
+    
    
 }

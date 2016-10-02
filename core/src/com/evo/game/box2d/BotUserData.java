@@ -18,6 +18,8 @@ public class BotUserData extends UserData {
 	
 	private float secondsSurvived; //Fitness function
 
+	private boolean wallTouch;
+	
 	public BotUserData() {
 		
 		super();
@@ -55,7 +57,6 @@ public class BotUserData extends UserData {
 	public float getSeconds(){
 		//System.out.println(secondsSurvived);
 		return secondsSurvived;
-		
 	}
 
 	// Neural Network Inputs
@@ -79,6 +80,9 @@ public class BotUserData extends UserData {
 	public float getAngleToNearestFood() {
 		return angleToNearestFood;
 	}
+	public boolean getWallTouch(){
+		return wallTouch;
+	}
 
 	public void setDistanceToNearestPlayer(float f) {
 		distanceToNearestPlayer = f;
@@ -98,6 +102,9 @@ public class BotUserData extends UserData {
 
 	public void setAngleToNearestFood(float f) {
 		angleToNearestFood = f;
+	}
+	public void setWallTouch(boolean t){
+		wallTouch = t;
 	}
 
 

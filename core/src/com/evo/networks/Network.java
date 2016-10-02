@@ -1,6 +1,5 @@
 package com.evo.networks;
 
-import org.encog.engine.network.activation.ActivationSigmoid;
 import org.encog.engine.network.activation.ActivationTANH;
 import org.encog.neural.networks.BasicNetwork;
 import org.encog.neural.networks.layers.BasicLayer;
@@ -13,7 +12,7 @@ public class Network extends BasicNetwork {
 
 	public Network() {
 
-		this.addLayer(new BasicLayer(new ActivationTANH(), false, 7));
+		this.addLayer(new BasicLayer(new ActivationTANH(), false, 8));
 		this.addLayer(new BasicLayer(new ActivationTANH(), false, 4));
 		this.addLayer(new BasicLayer(new ActivationTANH(), false, 4));
 		this.addLayer(new BasicLayer(new ActivationTANH(), false, 4));
@@ -29,7 +28,7 @@ public class Network extends BasicNetwork {
 				for (int b = 0; b < this.getLayerNeuronCount(x + 1); b++){
 					this.setWeight(x, a, b, gene.get(count));
 					count++;
-					System.out.println(this.getWeight(x, a, b));
+					//System.out.println(this.getWeight(x, a, b));
 				}
 			}
 		}

@@ -4,5 +4,6 @@ public enum UserDataType {
 
 	RUNNER,
 	FOOD,
-	BOT
+	BOT,
+	WALL
 }

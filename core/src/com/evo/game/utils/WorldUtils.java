@@ -7,6 +7,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.evo.game.box2d.BotUserData;
 import com.evo.game.box2d.FoodUserData;
 import com.evo.game.box2d.RunnerUserData;
+import com.evo.game.box2d.WallUserData;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.EdgeShape;
 
@@ -47,6 +48,7 @@ public class WorldUtils {
         borderBody.createFixture(roof, 0.0f);
         roof.dispose();
         
+        borderBody.setUserData(new WallUserData());
         return borderBody;
         
     }
