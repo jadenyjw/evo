@@ -81,12 +81,16 @@ public class GameStage extends Stage implements ContactListener {
 
 		setUpWorld();
 		setupCamera();
+		
 		Gdx.input.setInputProcessor(this);
 		renderer = new Box2DDebugRenderer();
 	}
 
 	private void setupCamera() {
 		camera = new OrthographicCamera(VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
+		camera.position.set(runner.body.getPosition().x, runner.body.getPosition().x, 0);
+		camera.update();
+		
 	}
 
 	private void setUpWorld() {
@@ -107,6 +111,7 @@ public class GameStage extends Stage implements ContactListener {
 		setUpFood();
 
 		setUpText();
+		
 	}
 
 	private void setUpBorder() {
@@ -116,6 +121,8 @@ public class GameStage extends Stage implements ContactListener {
 	private void setUpRunner() {
 		runner = new Runner(WorldUtils.createRunner(world));
 		addActor(runner);
+		runner.setPosition(runner.body.getPosition().x, runner.body.getPosition().y);
+		
 	}
 
 	private void setUpFood() {
@@ -153,7 +160,7 @@ public class GameStage extends Stage implements ContactListener {
 			for (int x = 0; x < geneRecord.size - 5; x++) {
 
 				for (int y = 0; y < geneRecord.get(x).size; y++) {
-					float uniform = (float) (randomno.nextGaussian() * Math.pow(10, -x));
+					float uniform = (float) (randomno.nextGaussian() * Math.pow(3, -x));
 					System.out.println(uniform);
 					// System.out.println(uniform);
 					if (geneRecord.get(x).get(y) + uniform > 1) {

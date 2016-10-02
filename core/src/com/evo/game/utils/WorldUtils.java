@@ -11,6 +11,7 @@ import com.evo.game.box2d.WallUserData;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.EdgeShape;
 
+
 import com.badlogic.gdx.physics.box2d.World;
 
 public class WorldUtils {
@@ -57,7 +58,7 @@ public class WorldUtils {
     	
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
-        bodyDef.position.set(new Vector2(Constants.RUNNER_X, Constants.RUNNER_Y));
+        bodyDef.position.set(new Vector2((float) (Math.random() * (Constants.SPAWN_RADIUS) + 1),(float) (Math.random() * (Constants.SPAWN_RADIUS) + 1)));
         CircleShape shape = new CircleShape();
         shape.setRadius(0.2f);
         Body body = world.createBody(bodyDef);
