@@ -80,6 +80,7 @@ public static Body createBot(World world, float x, float y) {
         botBody.createFixture(shape, 0.0f);
         botBody.resetMassData();
         botBody.setUserData(new BotUserData());
+        botBody.setTransform(botBody.getPosition(), (float) Math.random() * 360);
         shape.dispose();
         return botBody;
         

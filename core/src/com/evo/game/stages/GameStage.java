@@ -76,6 +76,13 @@ public class GameStage extends Stage implements ContactListener {
 
 	private Array<Gene> geneRecord = new Array<Gene>();
 	private Array<Float> timeRecord = new Array<Float>();
+	
+	private float lowestDistanceToBot = Float.POSITIVE_INFINITY;
+	private float angleToBot;
+	private float sizeOfBot;
+
+	private float lowestDistanceToFood = Float.POSITIVE_INFINITY;
+	private float angleToFood;
 
 	public GameStage() {
 
@@ -296,20 +303,18 @@ public class GameStage extends Stage implements ContactListener {
 
 			// Calculate for neural network
 			world.getBodies(bodies);
-
+			
 			for (int x = 0; x < bot.size; x++) {
 
 				if (bot.get(x).body.isActive()) {
 
 					Bot currentBot = bot.get(x);
 
-					float lowestDistanceToBot = Float.POSITIVE_INFINITY;
-					float angleToBot;
-					float sizeOfBot;
-
-					float lowestDistanceToFood = Float.POSITIVE_INFINITY;
-					float angleToFood;
-					if (bodies.size > 0) {
+					lowestDistanceToBot = Float.POSITIVE_INFINITY;
+					lowestDistanceToFood = Float.POSITIVE_INFINITY;
+					
+					
+					
 						for (int y = 0; y < bodies.size; y++) {
 
 							Body targetBody = bodies.get(y);
@@ -322,9 +327,8 @@ public class GameStage extends Stage implements ContactListener {
 										lowestDistanceToFood = calculateDistance(currentBot.body, targetBody);
 										angleToFood = calculateAngle(currentBot.body, targetBody);
 
-										((BotUserData) (currentBot.getUserData()))
-												.setDistanceToNearestPlayer(lowestDistanceToFood);
-										((BotUserData) (currentBot.getUserData())).setAngleToNearestFood(angleToFood);
+										
+										
 
 									}
 
@@ -336,14 +340,13 @@ public class GameStage extends Stage implements ContactListener {
 										&& targetBody != currentBot.body) {
 
 									if (calculateDistance(currentBot.body, targetBody) < lowestDistanceToBot) {
+										
 										lowestDistanceToBot = calculateDistance(currentBot.body, targetBody);
 										angleToBot = calculateAngle(currentBot.body, targetBody);
 										sizeOfBot = calculateSize(targetBody);
 
-										((BotUserData) (currentBot.getUserData()))
-												.setDistanceToNearestPlayer(lowestDistanceToBot);
-										((BotUserData) (currentBot.getUserData())).setAngleToNearestPlayer(angleToBot);
-										((BotUserData) (currentBot.getUserData())).setSizeOfNearestPlayer(sizeOfBot);
+										
+									
 									}
 
 								}
@@ -351,8 +354,18 @@ public class GameStage extends Stage implements ContactListener {
 							}
 
 						}
-					}
+						
+					
+					((BotUserData) (currentBot.getUserData()))
+					.setDistanceToNearestPlayer(lowestDistanceToFood);
+					((BotUserData) (currentBot.getUserData())).setAngleToNearestFood(angleToFood);
+					((BotUserData) (currentBot.getUserData()))
+					.setDistanceToNearestPlayer(lowestDistanceToBot);
+					((BotUserData) (currentBot.getUserData())).setAngleToNearestPlayer(angleToBot);
+					((BotUserData) (currentBot.getUserData())).setSizeOfNearestPlayer(sizeOfBot);
+					
 				}
+				
 
 			}
 			// System.out.println(runner.body.getFixtureList().first().getShape().getRadius()
