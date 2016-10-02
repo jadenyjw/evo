@@ -14,9 +14,9 @@ public class Network extends BasicNetwork {
 	public Network() {
 
 		this.addLayer(new BasicLayer(new ActivationTANH(), false, 7));
-		this.addLayer(new BasicLayer(new ActivationTANH(), false, 3));
-		this.addLayer(new BasicLayer(new ActivationTANH(), false, 3));
-		this.addLayer(new BasicLayer(new ActivationTANH(), false, 3));
+		this.addLayer(new BasicLayer(new ActivationTANH(), false, 4));
+		this.addLayer(new BasicLayer(new ActivationTANH(), false, 4));
+		this.addLayer(new BasicLayer(new ActivationTANH(), false, 4));
 		this.getStructure().finalizeStructure();
 
 	}

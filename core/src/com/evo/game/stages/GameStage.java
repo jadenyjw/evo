@@ -119,7 +119,7 @@ public class GameStage extends Stage implements ContactListener {
 	}
 
 	private void setUpFood() {
-		for (int x = 0; x < 200; x++) {
+		for (int x = 0; x < 80; x++) {
 			food.add(new Food(
 					WorldUtils.createFood(world, (float) Math.random() * (28) + 1, (float) Math.random() * (28) + 1)));
 			food.get(x).getUserData().setID(x);
@@ -181,7 +181,7 @@ public class GameStage extends Stage implements ContactListener {
 				Random rand = new Random();
 
 				
-				for (int y = 0; y < 39; y++) {
+				for (int y = 0; y < 60; y++) {
 					
 					bot.get(x).gene.add(rand.nextFloat() * (1 - (-1)) + -1);
 
@@ -231,10 +231,16 @@ public class GameStage extends Stage implements ContactListener {
 	}
 	
 	private void updateGrow(Body body) {
+		
 		growBodies.removeValue(body, true);
 		
-		if (BodyUtils.bodyIsBot(body)) {
-			bot.get(((BotUserData) (body.getUserData())).getID()).grow(0.02f);
+		if (BodyUtils.bodyIsBot(body) && bot.size > 0) {
+			try {
+				bot.get(((BotUserData) (body.getUserData())).getID()).grow(0.02f);
+			} catch (IllegalStateException name) {
+
+			}
+			
 		}
 		if (BodyUtils.bodyIsRunner(body)) {
 			runner.grow(0.02f);
@@ -302,7 +308,7 @@ public class GameStage extends Stage implements ContactListener {
 
 					float lowestDistanceToFood = Float.POSITIVE_INFINITY;
 					float angleToFood;
-
+					if (bodies.size > 0){
 					for (int y = 0; y < bodies.size; y++) {
 
 						Body targetBody = bodies.get(y);
@@ -344,7 +350,7 @@ public class GameStage extends Stage implements ContactListener {
 						}
 
 					}
-
+					}
 				}
 
 			}
@@ -362,7 +368,7 @@ public class GameStage extends Stage implements ContactListener {
 					input.add(1, botData.getAngleToNearestFood() / (2 * MathUtils.PI));
 					input.add(2, botData.getDistanceToNearestPlayer() / 45);
 					input.add(3, botData.getAngleToNearestPlayer() / (2 * MathUtils.PI));
-					input.add(4, botData.getSizeOfNearestPlayer() / 4.22);
+					input.add(4, botData.getSizeOfNearestPlayer() / 4);
 					input.add(5, bot.get(x).body.getFixtureList().first().getShape().getRadius() / 4.22);
 					if (bot.get(x).body.getLinearVelocity().len() > 0){
 						input.add(6, 1);
@@ -374,15 +380,31 @@ public class GameStage extends Stage implements ContactListener {
 					// inputData.setData(input);
 					final MLData output = bot.get(x).network.compute(input);
 					//System.out.println(output);
-
-					if (output.getData(0) > output.getData(1) && output.getData(0) > output.getData(2)) {
-						bot.get(x).moveForward();
-					} else if (output.getData(1) > output.getData(0) && output.getData(1) > output.getData(2)) {
-						bot.get(x).turnRight();
+					float highest = -1;
+					int highestID = 0;
+					for (int y = 0; y < output.size(); y++){
+						if(output.getData(y) > highest){
+							highestID = y;
+							highest = (float) output.getData(y);
+						}
 					}
-
-					else if (output.getData(2) > output.getData(0) && output.getData(2) > output.getData(1)) {
-						bot.get(x).turnLeft();
+					
+					
+					switch (highestID){
+					
+					case 0: bot.get(x).moveForward();
+					break;
+					
+					case 1: bot.get(x).turnRight();
+					break;
+					
+					case 2: bot.get(x).turnLeft();
+					break;
+					
+					case 3: bot.get(x).stop();
+					break;
+					
+						
 					}
 
 				}
