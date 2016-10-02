@@ -55,8 +55,10 @@ public class GameStage extends Stage implements ContactListener {
 
 	private OrthographicCamera camera;
 	private Box2DDebugRenderer renderer;
+	
 	private Array<Body> deletedBodies;
 	private Array<Body> bodies;
+	private Array<Body> growBodies;
 
 	private int generation = 1;
 
@@ -93,6 +95,7 @@ public class GameStage extends Stage implements ContactListener {
 		world.setContactListener(this);
 		bodies = new Array<Body>();
 		deletedBodies = new Array<Body>();
+		growBodies = new Array<Body>();
 		if (generation == 1) {
 			bot = new Array<Bot>();
 		}
@@ -160,12 +163,6 @@ public class GameStage extends Stage implements ContactListener {
 				  }
 				}
 			}
-		
-			
-			
-		
-			
-
 		}
 
 		for (int x = 0; x < 10; x++) {
@@ -216,7 +213,7 @@ public class GameStage extends Stage implements ContactListener {
 		}
 	}
 
-	private void update(Body body) {
+	private void updateDelete(Body body) {
 
 		if (BodyUtils.bodyIsBot(body)) {
 			// bot.get(((BotUserData)
@@ -230,6 +227,22 @@ public class GameStage extends Stage implements ContactListener {
 		deletedBodies.removeValue(body, true);
 
 		world.destroyBody(body);
+
+	}
+	
+	private void updateGrow(Body body) {
+		growBodies.removeValue(body, true);
+		
+		if (BodyUtils.bodyIsBot(body)) {
+			bot.get(((BotUserData) (body.getUserData())).getID()).grow(0.02f);
+		}
+		if (BodyUtils.bodyIsRunner(body)) {
+			runner.grow(0.02f);
+		}
+
+		
+
+		
 
 	}
 
@@ -251,7 +264,10 @@ public class GameStage extends Stage implements ContactListener {
 		}
 
 		for (Body body : deletedBodies) {
-			update(body);
+			updateDelete(body);
+		}
+		for (Body body : growBodies) {
+			updateGrow(body);
 		}
 
 		botsLabel.setText("Bots Left: " + bodySize(bot));
@@ -507,12 +523,12 @@ public class GameStage extends Stage implements ContactListener {
 
 			if (BodyUtils.bodyIsFood(a) && !(deletedBodies.contains(a, true))) {
 
-				bot.get(((BotUserData) (b.getUserData())).getID()).grow(0.02f);
+				growBodies.add(b);
 				deletedBodies.add(a);
 
 			} else if (BodyUtils.bodyIsFood(b) && !(deletedBodies.contains(b, true))) {
 
-				bot.get(((BotUserData) (a.getUserData())).getID()).grow(0.02f);
+				growBodies.add(a);
 				deletedBodies.add(b);
 
 			}
@@ -532,14 +548,14 @@ public class GameStage extends Stage implements ContactListener {
 
 					deletedBodies.add(a);
 
-					runner.grow(0.02f);
+					growBodies.add(b);
 
 				} else if (a.getFixtureList().first().getShape().getRadius() > runner.body.getFixtureList().first().getShape().getRadius()) {
 
 					deletedBodies.add(b);
 					runner.remove();
 					messageLabel.setText("You lost this round!");
-					bot.get(((BotUserData) a.getUserData()).getID()).grow(0.02f);
+					growBodies.add(a);
 
 				}
 
@@ -552,14 +568,14 @@ public class GameStage extends Stage implements ContactListener {
 
 					deletedBodies.add(b);
 
-					runner.grow(0.02f);
+					growBodies.add(a);
 
 				} else if (b.getFixtureList().first().getShape().getRadius() > runner.body.getFixtureList().first().getShape().getRadius()) {
 
 					deletedBodies.add(a);
 					runner.remove();
 					messageLabel.setText("You lost this round!");
-					bot.get(((BotUserData) b.getUserData()).getID()).grow(0.02f);
+					growBodies.add(b);
 				}
 			}
 
@@ -578,7 +594,7 @@ public class GameStage extends Stage implements ContactListener {
 					geneRecord.add(bot.get(((BotUserData) (a.getUserData())).getID()).gene);
 					timeRecord.add(((BotUserData) (a.getUserData())).getSeconds());
 
-					bot.get(((BotUserData) b.getUserData()).getID()).grow(0.02f);
+					growBodies.add(b);
 					
 
 				} else if (a.getFixtureList().first().getShape().getRadius() > b.getFixtureList().first().getShape().getRadius()) {
@@ -588,7 +604,7 @@ public class GameStage extends Stage implements ContactListener {
 					geneRecord.add(bot.get(((BotUserData) (b.getUserData())).getID()).gene);
 					timeRecord.add(((BotUserData) (b.getUserData())).getSeconds());
 
-					bot.get(((BotUserData) a.getUserData()).getID()).grow(0.02f);
+					growBodies.add(a);
 					
 					
 					
