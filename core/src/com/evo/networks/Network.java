@@ -1,7 +1,7 @@
 package com.evo.networks;
 
 import org.encog.engine.network.activation.ActivationSigmoid;
-
+import org.encog.engine.network.activation.ActivationTANH;
 import org.encog.neural.networks.BasicNetwork;
 import org.encog.neural.networks.layers.BasicLayer;
 
@@ -13,10 +13,10 @@ public class Network extends BasicNetwork {
 
 	public Network() {
 
-		this.addLayer(new BasicLayer(new ActivationSigmoid(), false, 7));
-		this.addLayer(new BasicLayer(new ActivationSigmoid(), false, 3));
-		this.addLayer(new BasicLayer(new ActivationSigmoid(), false, 3));
-		this.addLayer(new BasicLayer(new ActivationSigmoid(), false, 3));
+		this.addLayer(new BasicLayer(new ActivationTANH(), false, 7));
+		this.addLayer(new BasicLayer(new ActivationTANH(), false, 3));
+		this.addLayer(new BasicLayer(new ActivationTANH(), false, 3));
+		this.addLayer(new BasicLayer(new ActivationTANH(), false, 3));
 		this.getStructure().finalizeStructure();
 
 	}
