@@ -324,7 +324,7 @@ public class GameStage extends Stage implements ContactListener {
 
 										((BotUserData) (currentBot.getUserData()))
 												.setDistanceToNearestPlayer(lowestDistanceToFood);
-										((BotUserData) (currentBot.getUserData())).setAngleToNearestPlayer(angleToFood);
+										((BotUserData) (currentBot.getUserData())).setAngleToNearestFood(angleToFood);
 
 									}
 
