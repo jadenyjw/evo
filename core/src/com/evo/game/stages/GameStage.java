@@ -2,10 +2,8 @@ package com.evo.game.stages;
 
 import com.evo.game.box2d.BotUserData;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.Random;
 
 import org.encog.ml.data.MLData;
@@ -32,7 +30,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.TimeUtils;
+
 import com.evo.game.actors.Bot;
 import com.evo.game.actors.Food;
 import com.evo.game.actors.Runner;
