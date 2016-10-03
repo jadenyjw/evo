@@ -121,7 +121,6 @@ public class GameStage extends Stage implements ContactListener {
 		setUpBots();
 		setUpRunner();
 		setUpFood();
-
 		setUpText();
 		
 	}
@@ -164,32 +163,37 @@ public class GameStage extends Stage implements ContactListener {
 	}
 
 	private void setUpBots() {
-
+System.out.println(geneRecord);
 		if (generation != 1) {
 
 			
-
+			//System.out.println("1:"+ geneRecord);
 			for (int g = 0; g < geneRecord.size - 5; g++) {
-
+				//System.out.println("2:"+ geneRecord);
+				Random randomno = new Random();
+				
 				for (int y = 0; y < geneRecord.get(g).size; y++) {
+					//System.out.println("3:"+ geneRecord);
 					
-					Random randomno = new Random();
 					float uniform = (float) (((randomno.nextGaussian()) * Math.pow(10, -(g+1))));
-					System.out.println("wow" + geneRecord.get(g).get(y));
-					System.out.println("hello" + uniform);
+					//System.out.println("wow" + geneRecord.get(g).get(y));
+					//System.out.println("hello" + uniform);
 					// System.out.println(uniform);
+					/*
 					if (geneRecord.get(g).get(y) + uniform > 1) {
-						geneRecord.get(g).set(y, geneRecord.get(g).get(y) - uniform);
+						//geneRecord.get(g).set(y, geneRecord.get(g).get(y) - uniform);
 					} else {
-						geneRecord.get(g).set(y, geneRecord.get(g).get(y) + uniform);
+						//geneRecord.get(g).set(y, geneRecord.get(g).get(y) + uniform);
 					}
+					*/
 				}
 			}
 		}
 
-		for (int x = 0; x < 10; x++) {
+		
 
 			if (generation == 1) {
+				for (int x = 0; x < 10; x++) {
 				Gene gene = new Gene();
 				Network network = new Network();
 
@@ -199,7 +203,6 @@ public class GameStage extends Stage implements ContactListener {
 
 				// Generate a random gene
 
-				bot.get(x).gene = new Gene();
 				Random rand = new Random();
 
 				for (int y = 0; y < 64; y++) {
@@ -209,12 +212,16 @@ public class GameStage extends Stage implements ContactListener {
 				}
 
 				bot.get(x).network.setWeights(bot.get(x).gene);
-				// System.out.println(bot.get(x).network.dumpWeights());
-
+				//System.out.println(bot.get(x).network.dumpWeights());
+				}
 			}
 
 			else {
+				for (int x = 0; x < 10; x++) {
+					
+					
 
+					
 				BodyDef bodyDef = new BodyDef();
 				bodyDef.type = BodyDef.BodyType.DynamicBody;
 				bodyDef.position.set(new Vector2((float) Math.random() * (Constants.SPAWN_RADIUS) + 1,
@@ -226,16 +233,21 @@ public class GameStage extends Stage implements ContactListener {
 				botBody.resetMassData();
 				botBody.setUserData(new BotUserData());
 				bot.get(x).body = botBody;
-				bot.get(x).network.setWeights(geneRecord.get(x));
+				((BotUserData) (bot.get(x).body.getUserData())).setID(x);
 				
+				bot.get(x).gene = geneRecord.get(x);
+				bot.get(x).network.setWeights(geneRecord.get(x));
 
 			}
-
-		}
+			}
+			
+	
 		geneRecord.clear();
 		timeRecord.clear();
-	}
 
+		
+	
+	}
 	private void updateDelete(Body body) {
 
 		if (BodyUtils.bodyIsBot(body)) {
@@ -629,7 +641,8 @@ public class GameStage extends Stage implements ContactListener {
 
 					geneRecord.add(bot.get(((BotUserData) (a.getUserData())).getID()).gene);
 					timeRecord.add(((BotUserData) (a.getUserData())).getSeconds());
-
+					System.out.println(bot.get(((BotUserData) (a.getUserData())).getID()).gene);
+					
 					deletedBodies.add(a);
 
 					growBodies.add(b);
@@ -651,7 +664,7 @@ public class GameStage extends Stage implements ContactListener {
 
 					geneRecord.add(bot.get(((BotUserData) (b.getUserData())).getID()).gene);
 					timeRecord.add(((BotUserData) (b.getUserData())).getSeconds());
-
+					System.out.println(bot.get(((BotUserData) (b.getUserData())).getID()).gene);
 					deletedBodies.add(b);
 
 					growBodies.add(a);
@@ -713,7 +726,11 @@ public class GameStage extends Stage implements ContactListener {
 			}
 
 		}
+		//for (int x = 0; x < geneRecord.size; x++)
+		//System.out.println(geneRecord.get(x).get(0));
 	}
+	
+	
 
 	@Override
 	public void endContact(Contact contact) {
@@ -723,7 +740,7 @@ public class GameStage extends Stage implements ContactListener {
 		
 		if ((BodyUtils.bodyIsBot(a) && BodyUtils.bodyIsWall(b))
 				|| (BodyUtils.bodyIsWall(a) && BodyUtils.bodyIsBot(b))) {
-			System.out.println("yay");
+	
 			if (BodyUtils.bodyIsBot(a) && BodyUtils.bodyIsWall(b)) {
 
 				((BotUserData) (a.getUserData())).setWallTouch(false);

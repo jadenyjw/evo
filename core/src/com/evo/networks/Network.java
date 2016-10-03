@@ -5,6 +5,7 @@ import org.encog.neural.networks.BasicNetwork;
 import org.encog.neural.networks.layers.BasicLayer;
 
 import com.badlogic.gdx.utils.Array;
+import com.evo.genetics.Gene;
 
 public class Network extends BasicNetwork {
 
@@ -20,9 +21,8 @@ public class Network extends BasicNetwork {
 
 	}
 
-	public void setWeights(Array<Float> gene) {
+	public void setWeights(Gene gene) {
 		int count = 0;
-		
 		for (int x = 0; x < this.getLayerCount() - 1; x ++){
 			for (int a = 0; a < this.getLayerNeuronCount(x); a++){
 				for (int b = 0; b < this.getLayerNeuronCount(x + 1); b++){

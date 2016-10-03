@@ -12,15 +12,18 @@ public class Bot extends GameActor{
 
 	private float velX; 
 	private float velY;
-	public Gene gene;
-	public Network network;
+	public Gene gene = new Gene();
+	public Network network = new Network();
 	
 	public Bot(Body body, Gene gene, Network network) {
         super(body);
         this.network = network;
         this.gene = gene;
-     
     }
+	
+	public void setGene(Gene gene){
+		this.gene = gene;
+	}
 
 	@Override
 	 public BotUserData getUserData(){
