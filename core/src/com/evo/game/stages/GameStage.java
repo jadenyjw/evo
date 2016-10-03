@@ -179,13 +179,13 @@ System.out.println(geneRecord);
 					//System.out.println("wow" + geneRecord.get(g).get(y));
 					//System.out.println("hello" + uniform);
 					// System.out.println(uniform);
-					/*
+					
 					if (geneRecord.get(g).get(y) + uniform > 1) {
-						//geneRecord.get(g).set(y, geneRecord.get(g).get(y) - uniform);
+						geneRecord.get(g).set(y, geneRecord.get(g).get(y) - uniform);
 					} else {
-						//geneRecord.get(g).set(y, geneRecord.get(g).get(y) + uniform);
+						geneRecord.get(g).set(y, geneRecord.get(g).get(y) + uniform);
 					}
-					*/
+					
 				}
 			}
 		}
