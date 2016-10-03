@@ -2,6 +2,10 @@ package com.evo.game.stages;
 
 import com.evo.game.box2d.BotUserData;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.Random;
 
 import org.encog.ml.data.MLData;
@@ -28,6 +32,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.TimeUtils;
 import com.evo.game.actors.Bot;
 import com.evo.game.actors.Food;
 import com.evo.game.actors.Runner;
@@ -382,8 +387,8 @@ public class GameStage extends Stage implements ContactListener {
 					input.add(1, botData.getAngleToNearestFood() / (2 * MathUtils.PI));
 					input.add(2, botData.getDistanceToNearestPlayer() / 45);
 					input.add(3, botData.getAngleToNearestPlayer() / (2 * MathUtils.PI));
-					input.add(4, botData.getSizeOfNearestPlayer() / 4);
-					input.add(5, bot.get(x).body.getFixtureList().first().getShape().getRadius() / 4.22);
+					input.add(4, botData.getSizeOfNearestPlayer() / 2);
+					input.add(5, bot.get(x).body.getFixtureList().first().getShape().getRadius() / 2);
 					if (bot.get(x).body.getLinearVelocity().len() > 0) {
 						input.add(6, 1);
 					} else {
@@ -503,6 +508,27 @@ public class GameStage extends Stage implements ContactListener {
 		}
 		return size;
 	}
+	
+	//Saving networks
+	
+	public void saveNetworks(){
+		
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
+		LocalDateTime dateTime = LocalDateTime.now();
+		String formattedDateTime = dateTime.format(formatter);
+		
+		FileHandle file = Gdx.files.local("models/" + formattedDateTime + ".ai");
+		
+		for (int x = 0; x < bot.size; x++){
+			Gene gene = bot.get(x).gene;
+			for (int y = 0; y < gene.size; y++){
+				
+				file.writeString(gene.get(y).toString() + "\n", true);
+			}
+			file.writeString("\n", true);
+		}
+		
+	}
 
 	public boolean leftKeyPressed;
 	public boolean upKeyPressed;
@@ -534,7 +560,16 @@ public class GameStage extends Stage implements ContactListener {
 		if (keycode == Input.Keys.UP) {
 			upKeyPressed = false;
 		}
-
+		
+		return false;
+	}
+	
+	@Override
+	public boolean keyTyped(char c){
+		
+		if (c == 's'){
+			saveNetworks();
+		}
 		return false;
 	}
 
