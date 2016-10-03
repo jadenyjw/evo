@@ -167,18 +167,21 @@ public class GameStage extends Stage implements ContactListener {
 
 		if (generation != 1) {
 
-			Random randomno = new Random();
+			
 
-			for (int x = 0; x < geneRecord.size - 5; x++) {
+			for (int g = 0; g < geneRecord.size - 5; g++) {
 
-				for (int y = 0; y < geneRecord.get(x).size; y++) {
-					float uniform = (float) (randomno.nextGaussian() * Math.pow(3, -x));
-					System.out.println(uniform);
+				for (int y = 0; y < geneRecord.get(g).size; y++) {
+					
+					Random randomno = new Random();
+					float uniform = (float) (((randomno.nextGaussian()) * Math.pow(10, -(g+1))));
+					System.out.println("wow" + geneRecord.get(g).get(y));
+					System.out.println("hello" + uniform);
 					// System.out.println(uniform);
-					if (geneRecord.get(x).get(y) + uniform > 1) {
-						geneRecord.get(x).set(y, geneRecord.get(x).get(y) - uniform);
+					if (geneRecord.get(g).get(y) + uniform > 1) {
+						geneRecord.get(g).set(y, geneRecord.get(g).get(y) - uniform);
 					} else {
-						geneRecord.get(x).set(y, geneRecord.get(x).get(y) + uniform);
+						geneRecord.get(g).set(y, geneRecord.get(g).get(y) + uniform);
 					}
 				}
 			}
@@ -224,10 +227,13 @@ public class GameStage extends Stage implements ContactListener {
 				botBody.setUserData(new BotUserData());
 				bot.get(x).body = botBody;
 				bot.get(x).network.setWeights(geneRecord.get(x));
+				
 
 			}
 
 		}
+		geneRecord.clear();
+		timeRecord.clear();
 	}
 
 	private void updateDelete(Body body) {
