@@ -298,12 +298,7 @@ System.out.println(geneRecord);
 			}
 		}
 
-		for (Body body : deletedBodies) {
-			updateDelete(body);
-		}
-		for (Body body : growBodies) {
-			updateGrow(body);
-		}
+		
 
 		botsLabel.setText("Bots Left: " + bodySize(bot));
 
@@ -469,8 +464,16 @@ System.out.println(geneRecord);
 			camera.position.set(runner.getX(), runner.getY(), 0);
 			camera.update();
 		}
-
+		
+		for (Body body : deletedBodies) {
+			updateDelete(body);
+		}
+		for (Body body : growBodies) {
+			updateGrow(body);
+		}
+		
 		// Fixed timestep
+		
 		accumulator += delta;
 
 		while (accumulator >= delta) {
