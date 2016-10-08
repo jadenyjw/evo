@@ -248,16 +248,9 @@ System.out.println(geneRecord);
 	}
 	private void updateDelete(Body body) {
 
-		if (BodyUtils.bodyIsBot(body)) {
-			// bot.get(((BotUserData)
-			// body.getUserData()).getID()).addAction(Actions.removeActor());
-		}
-		if (BodyUtils.bodyIsFood(body)) {
-			// food.get(((FoodUserData)
-			// body.getUserData()).getID()).addAction(Actions.removeActor());
-		}
 
 		deletedBodies.removeValue(body, true);
+	
 
 		world.destroyBody(body);
 
@@ -399,6 +392,7 @@ System.out.println(geneRecord);
 					input.add(2, botData.getDistanceToNearestPlayer() / 45);
 					input.add(3, botData.getAngleToNearestPlayer() / (2 * MathUtils.PI));
 					input.add(4, botData.getSizeOfNearestPlayer() / 2);
+					System.out.println(bot.get(x).body.getFixtureList().size);
 					input.add(5, bot.get(x).body.getFixtureList().first().getShape().getRadius() / 2);
 					if (bot.get(x).body.getLinearVelocity().len() > 0) {
 						input.add(6, 1);

@@ -28,7 +28,7 @@ public class MainMenuScreen implements Screen{
 
     public MainMenuScreen()
     {
-        atlas = new TextureAtlas("assets/skin/uiskin.atlas");
+        atlas = new TextureAtlas(Gdx.files.internal("assets/skin/uiskin.atlas"));
         skin = new Skin(Gdx.files.internal("assets/skin/uiskin.json"), atlas);
 
         batch = new SpriteBatch();
@@ -41,7 +41,7 @@ public class MainMenuScreen implements Screen{
 
         stage = new Stage(viewport, batch);
 
-        //Stage should controll input:
+        //Stage should control input:
         Gdx.input.setInputProcessor(stage);
     }
 
